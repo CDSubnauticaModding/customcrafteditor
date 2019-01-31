@@ -1,4 +1,9 @@
 html {
       background-color: black;
-      
+      color: white;
+}
+
+#welcome-text {
+      text-align: center;
+      font-size: 36px;
 }
