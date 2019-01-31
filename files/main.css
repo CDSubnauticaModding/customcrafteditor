@@ -9,12 +9,12 @@ html {
 }
 
 #background-video {
-      position: absolute;
-      top: 0px;
-      right: 0px;
+      position: fixed;
+      top: -20%;
+      right: 20%;
       min-width: 100%;
       min-height: 100%;
-      width: auto;
+      width: 140%;
       height: auto;
       z-index: -1000;
       overflow: hidden;
@@ -23,4 +23,8 @@ html {
       -moz-filter: blur(20px);
       -o-filter: blur(20px);
       -ms-filter: blur(20px);
+      bottom: 20%;
+      left: -20%;
+      align-content: center;
+      margin: 0 0 0 0;
 }
