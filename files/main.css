@@ -7,3 +7,20 @@ html {
       text-align: center;
       font-size: 36px;
 }
+
+#background-video {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -1000;
+      overflow: hidden;
+      filter: blur(20px);
+      -webkit-filter: blur(20px);
+      -moz-filter: blur(20px);
+      -o-filter: blur(20px);
+      -ms-filter: blur(20px);
+}
