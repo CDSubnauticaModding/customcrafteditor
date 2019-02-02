@@ -215,6 +215,7 @@ window.onload = function() {
 }
 
 function copy_output() {
+      clearSelection();
       document.getElementById("code-output").select();
       document.execCommand("copy");
       clearSelection();

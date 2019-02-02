@@ -3,6 +3,21 @@
             <title>CustomCraft - Editor v. 1.0.0</title>
             <link rel="stylesheet" type="text/css" href="/customcrafteditor/files/main.css">
             <script src="/customcrafteditor/editor/dev-1.0.0.js"></script>
+            <style>
+                  #code-output {
+                        font-family: Arial;
+                        border-color: white;
+                        background-color: black;
+                        color: white;
+                        border-style: solid;
+                        width: 100%;
+                        height: 75%;
+                        resize: vertical;
+                        tab-size: 4;
+                        -moz-tab-size: 4;
+                        -o-tab-size: 4;
+                  }
+            </style>
       </head>
       <body>
             <div id="output-mode">Output</div>
@@ -21,13 +36,24 @@
             <input id="add-tooltip" type="text" placeholder="Tooltip">
             <button id="add-confirm">Add a recipe</button>
             <br>
-            <input id="add-ingredient-id" type="text" placeholder="Ingredient ID">
+            <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="game_ids">
             <input id="add-ingredient-amount" type="number" min="-1" max="99" placeholder="Ingredient Amount" value="1">
+            <div id="ingredient-list"></div>
             <button id="add-ingredient-confirm">Add Ingredient</button>
             <input id="add-linked-id" type="text" placeholder="Linked ID">
             <button id="add-linked-confirm">Add Linked</button>
             <input id="add-unlock-id" type="text" placeholder="Unlock ID">
             <button id="add-unlock-confirm">Add Unlock</button>
+
+
+
+            <datalist id="game_ids">
+                        <option>Detroit Lions</option>
+                        <option>Detroit Pistons</option>
+                        <option>Detroit Red Wings</option>
+                        <option>Detroit Tigers</option>
+                        <!-- etc... -->
+                      </datalist>
       </body>
       <footer>
             
