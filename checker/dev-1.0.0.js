@@ -302,23 +302,40 @@ function checkInput() {
 
       if (input_mode == 1) {
             output += "ADDED RECIPE\n\n";
+            addedRecipes.forEach((v) => {
+                  output += "ID: " + v.id + "\n";
+                  output += "Amount: " + v.amount + "\n";
+                  output += "DisplayName: " + v.displayname + "\n";
+                  output += "Tooltip: " + v.tooltip + "\n";
+                  output += "Path: " + v.path + "\n";
+                  output += "ForceUnlockAtStart: " + v.forceunlock + "\n";
+                  output += "\n";
+            });
       }
       if (input_mode == 2) {
             output += "MODIFIED RECIPE\n\n";
+            modifiedRecipes.forEach((v) => {
+                  output += "ID: " + v.id + "\n";
+                  output += "Amount: " + v.amount + "\n";
+                  output += "DisplayName: " + v.displayname + "\n";
+                  output += "Tooltip: " + v.tooltip + "\n";
+                  output += "Path: " + v.path + "\n";
+                  output += "ForceUnlockAtStart: " + v.forceunlock + "\n";
+                  output += "\n";
+            });
       }
       if (input_mode == 3) {
             output += "ALIAS RECIPE\n\n";
+            aliasRecipes.forEach((v) => {
+                  output += "ID: " + v.id + "\n";
+                  output += "Amount: " + v.amount + "\n";
+                  output += "DisplayName: " + v.displayname + "\n";
+                  output += "Tooltip: " + v.tooltip + "\n";
+                  output += "Path: " + v.path + "\n";
+                  output += "ForceUnlockAtStart: " + v.forceunlock + "\n";
+                  output += "\n";
+            });
       }
-
-      aliasRecipes.forEach((v) => {
-            output += "ID: " + v.id + "\n";
-            output += "Amount: " + v.amount + "\n";
-            output += "DisplayName: " + v.displayname + "\n";
-            output += "Tooltip: " + v.tooltip + "\n";
-            output += "Path: " + v.path + "\n";
-            output += "ForceUnlockAtStart: " + v.forceunlock + "\n";
-            output += "\n";
-      });
 
       document.getElementById("code-output").value = output;
 }
