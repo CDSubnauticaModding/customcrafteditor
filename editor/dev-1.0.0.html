@@ -16,6 +16,19 @@
                         -moz-tab-size: 4;
                         -o-tab-size: 4;
                   }
+                  #code-input {
+                        font-family: Arial;
+                        border-color: white;
+                        background-color: black;
+                        color: white;
+                        border-style: solid;
+                        width: 100%;
+                        height: 50%;
+                        resize: vertical;
+                        tab-size: 4;
+                        -moz-tab-size: 4;
+                        -o-tab-size: 4;
+                  }
             </style>
       </head>
       <body>
@@ -24,27 +37,43 @@
             <div id="output-mode">Output</div>
             <textarea id="code-output" placeholder="Output" readonly="readonly"></textarea>
             <button id="copy-output">Copy output</button>
+            <button id="editor-input-toggle">Toggle Input</button>
+            <button id="change-to-nothing">Unselect Mode</button>
             <button id="change-to-added">AddedRecipe</button>
             <button id="change-to-modified">ModifiedRecipe</button>
             <button id="change-to-alias">AliasRecipe</button>
+            <button id="change-to-customtab">CustomCraftingTab</button>
             <br>
-            <input id="add-id" type="text" placeholder="ID" list="item-ids-list">
-            <input id="add-amount" type="number" min="-1" max="99" placeholder="Amount" value="0">
-            <Label>Default ForceUnlock<input id="add-forceunlock-default" type="checkbox" checked="checked"></Label>
-            <Label>Unlocks at Start<input id="add-forceunlock" type="checkbox" checked="checked"></Label>
-            <input id="add-path" type="text" placeholder="Path">
-            <input id="add-display" type="text" placeholder="Display Name">
-            <input id="add-tooltip" type="text" placeholder="Tooltip">
-            <button id="add-confirm">Add a recipe</button>
-            <br>
-            <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="item-ids-list">
-            <input id="add-ingredient-amount" type="number" min="-1" max="99" placeholder="Ingredient Amount" value="1">
-            <div id="ingredient-list"></div>
-            <button id="add-ingredient-confirm">Add Ingredient</button>
-            <input id="add-linked-id" type="text" placeholder="Linked ID" list="item-ids-list">
-            <button id="add-linked-confirm">Add Linked</button>
-            <input id="add-unlock-id" type="text" placeholder="Unlock ID" list="item-ids-list">
-            <button id="add-unlock-confirm">Add Unlock</button>
+            <div id="editor-input" hidden="hidden">
+                  <textarea id="code-input" placeholder="Input"></textarea>
+                  <button id="load-input">Load</button>
+                  <label>Loading erases all current data!</label>
+                  <br>
+            </div>
+            <div id="editor-recipe" hidden="hidden">
+                  <input id="add-id" type="text" placeholder="ID" list="item-ids-list">
+                  <input id="add-amount" type="number" min="-1" max="99" placeholder="Amount" value="0">
+                  <Label>Default ForceUnlock<input id="add-forceunlock-default" type="checkbox" checked="checked"></Label>
+                  <Label>Unlocks at Start<input id="add-forceunlock" type="checkbox" checked="checked"></Label>
+                  <input id="add-path" type="text" placeholder="Path" list="craftingtabs-ids-list">
+                  <input id="add-display" type="text" placeholder="Display Name">
+                  <input id="add-tooltip" type="text" placeholder="Tooltip">
+                  <button id="add-confirm">Add a recipe</button>
+                  <br>
+                  <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="item-ids-list">
+                  <input id="add-ingredient-amount" type="number" min="-1" max="99" placeholder="Ingredient Amount" value="1">
+                  <div id="ingredient-list"></div>
+                  <button id="add-ingredient-confirm">Add Ingredient</button>
+                  <input id="add-linked-id" type="text" placeholder="Linked ID" list="item-ids-list">
+                  <button id="add-linked-confirm">Add Linked</button>
+                  <input id="add-unlock-id" type="text" placeholder="Unlock ID" list="item-ids-list">
+                  <button id="add-unlock-confirm">Add Unlock</button>
+            </div>
+            <div id="editor-customtab" hidden="hidden">
+                  <button id="add-confirm">Add a recipe</button>
+                  <br>
+                  <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="item-ids-list">
+            </div>
 
 
 
@@ -145,7 +174,7 @@
                   <option>cyclopshullmodule1</option>
                   <!-- VEHICLES -->
                   <option>seamoth</option>
-                  <option>sub cyclops</option>
+                  <option>cyclops</option>
                   <option>exosuit</option>
                   <!-- ROCKET-->
                   <option>rocketbase</option>
@@ -538,6 +567,100 @@
                   <option>nutrientblock</option>
                   <option>powerupgrademodule</option>
                   <!--  -->
+            </datalist>
+            <datalist id="craftingtabs-ids-list">
+                  <option value="Constructor">Mobile Vehicle Bay</option>
+                  <option value="Constructor">CONSTRUCTOR</option>
+
+                  <option value="Constructor/Vehicles">Mobile Vehicle Bay > Vehicles</option>
+                  <option value="Constructor/Vehicles">CONSTRUCTOR/VEHICLES</option>
+
+                  <option value="Constructor/Rocket">Mobile Vehicle Bay > Rocket</option>
+                  <option value="Constructor/Rocket">CONSTRUCTOR/VEHICLES</option>
+
+                  <option value="CyclopsFabricator">Cyclops Fabricator</option>
+                  <option value="CyclopsFabricator">CYCLOPSFABRICATOR</option>
+
+                  <option value="Fabricator">Fabricator</option>
+                  <option value="Fabricator">FABRICATOR</option>
+
+                  <option value="Fabricator/Resources">Fabricator > Resources</option>
+                  <option value="Fabricator/Resources">FABRICATOR/RESOURCES</option>
+
+                  <option value="Fabricator/Resources/BasicMaterials">Fabricator > Resources > Basic Materials</option>
+                  <option value="Fabricator/Resources/BasicMaterials">FABRICATOR/RESOURCES/BASICMATERIALS</option>
+
+                  <option value="Fabricator/Resources/AdvancedMaterials">Fabricator > Resources > Advanced Materials</option>
+                  <option value="Fabricator/Resources/AdvancedMaterials">FABRICATOR/RESOURCES/ADVANCEDMATERIALS</option>
+
+                  <option value="Fabricator/Resources/Electronics">Fabricator > Resources > Electronics</option>
+                  <option value="Fabricator/Resources/Electronics">FABRICATOR/RESOURCES/ELECTRONICS</option>
+
+                  <option value="Fabricator/Survival">Fabricator > Survival</option>
+                  <option value="Fabricator/Survival">FABRICATOR/SURVIVAL</option>
+
+                  <option value="Fabricator/Survival/Water">Fabricator > Survival > Water</option>
+                  <option value="Fabricator/Survival/Water">FABRICATOR/SURVIVAL/WATER</option>
+
+                  <option value="Fabricator/Survival/CookedFood">Fabricator > Survival > Cooked Food</option>
+                  <option value="Fabricator/Survival/CookedFood">FABRICATOR/SURVIVAL/COOKEDFOOD</option>
+
+                  <option value="Fabricator/Survival/CuredFood">Fabricator > Survival > Cured Food</option>
+                  <option value="Fabricator/Survival/CuredFood">FABRICATOR/SURVIVAL/CUREDFOOD</option>
+
+                  <option value="Fabricator/Personal">Fabricator > Personal</option>
+                  <option value="Fabricator/Personal">FABRICATOR/PERSONAL</option>
+
+                  <option value="Fabricator/Personal/Equipment">Fabricator > Personal > Equipment</option>
+                  <option value="Fabricator/Personal/Equipment">FABRICATOR/PERSONAL/EQUIPMENT</option>
+
+                  <option value="Fabricator/Personal/Tools">Fabricator > Personal > Tools</option>
+                  <option value="Fabricator/Personal/Tools">FABRICATOR/PERSONAL/TOOLS</option>
+
+                  <option value="Fabricator/Machines">Fabricator > Machines</option>
+                  <option value="Fabricator/Machines">Fabricator > Deployables</option>
+                  <option value="Fabricator/Machines">FABRICATOR/MACHINES</option>
+
+                  <option value="MapRoom">Scanner Room</option>
+                  <option value="MapRoom">MAPROOM</option>
+
+                  <option value="SeamothUpgrades">Vehicle Upgrade Console</option>
+                  <option value="SeamothUpgrades">SEAMOTHUPGRADES</option>
+
+                  <option value="SeamothUpgrades/CommonModules">Vehicle Upgrade Console > Common Modules</option>
+                  <option value="SeamothUpgrades/CommonModules">SEAMOTHUPGRADES/COMMONMODULES</option>
+
+                  <option value="SeamothUpgrades/SeamothModules">Vehicle Upgrade Console > Seamoth Modules</option>
+                  <option value="SeamothUpgrades/SeamothModules">SEAMOTHUPGRADES/SEAMOTHMODULES</option>
+
+                  <option value="SeamothUpgrades/ExosuitModules">Vehicle Upgrade Console > Exosuit Modules</option>
+                  <option value="SeamothUpgrades/ExosuitModules">Vehicle Upgrade Console > Prawnsuit Modules</option>
+                  <option value="SeamothUpgrades/ExosuitModules">SEAMOTHUPGRADES/ExosuitModules</option>
+
+                  <option value="Workbench">Modification Station</option>
+                  <option value="Workbench">WORKBENCH</option>
+
+                  <option value="Workbench/KnifeMenu">Modification Station > Knife</option>
+                  <option value="Workbench/KnifeMenu">WORKBENCH/KNIFEMENU</option>
+
+                  <option value="Workbench/TankMenu">Modification Station > Tank</option>
+                  <option value="Workbench/TankMenu">WORKBENCH/TANKMENU</option>
+
+                  <option value="Workbench/FinsMenu">Modification Station > Fins</option>
+                  <option value="Workbench/FinsMenu">WORKBENCH/FINSMENU</option>
+
+                  <option value="Workbench/PropulsionCannonMenu">Modification Station > Propulsion Cannon</option>
+                  <option value="Workbench/PropulsionCannonMenu">WORKBENCH/PROPULSIONCANNONMENU</option>
+
+                  <option value="Workbench/CyclopsMenu">Modification Station > Cyclops</option>
+                  <option value="Workbench/CyclopsMenu">WORKBENCH/CYCLOPSMENU</option>
+
+                  <option value="Workbench/SeamothMenu">Modification Station > Seamoth</option>
+                  <option value="Workbench/SeamothMenu">WORKBENCH/SEAMOTHMENU</option>
+
+                  <option value="Workbench/ExosuitMenu">Modification Station > Exosuit</option>
+                  <option value="Workbench/ExosuitMenu">Modification Station > Prawnsuit</option>
+                  <option value="Workbench/ExosuitMenu">WORKBENCH/EXOSUITMENU</option>
             </datalist>
       </body>
       <footer>
