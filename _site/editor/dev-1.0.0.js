@@ -1,206 +1,3 @@
-function test() {
-      var el = document.getElementById("code-output");
-      var output = "";
-
-
-      if (outputMode === 0) {
-            var addedcount = addedRecipes.length;
-            addedRecipes.forEach((v,i) => {
-                  if (i === 0) {
-                        output += "AddedRecipes: (" + newline;
-                  } else {
-                        output += "," + newline + "(" + newline;
-                  }
-                  output += tab + "ItemID: " + v.id + ";" + newline;
-                  if (v.amount >= 0) {
-                        output += tab + "AmountCrafted: " + v.amount + ";" + newline;
-                  }
-                  var ingredientscount = v.ingredients.length;
-                  v.ingredients.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "Ingredients: " + newline + tab + "(" + newline;
-                        } else {
-                              output += "," + newline + tab + "(" + newline;
-                        }
-                        output += tab + tab + "ItemID: " + vv.id + ";" + newline;
-                        output += tab + tab + "Required: " + vv.amount + ";" + newline;
-                        output += tab + ")";
-                        if (ii+1 >= ingredientscount) {
-                              output += ";"+newline;
-                        }
-                  });
-                  var linkeditemscount = v.linkeditems.length;
-                  v.linkeditems.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "LinkedItemIDs: ";
-                        } else {
-                              output += ",";
-                        }
-                        output += vv;
-                        if (ii+1 >= linkeditemscount) {
-                              output += ";" + newline;
-                        }
-                  });
-                  var unlocksitemscount = v.unlocks.length;
-                  v.unlocks.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "Unlocks: ";
-                        } else {
-                              output += ",";
-                        }
-                        output += vv;
-                        if (ii+1 >= unlocksitemscount) {
-                              output += ";" + newline;
-                        }
-                  });
-                  if (v.path !== "") {
-                        output += tab + "Path: " + v.path + ";" + newline;
-                  }
-                  if (v.forceunlockdefault !== true) {
-                        output += tab + "ForceUnlockAtStart: " + v.forceunlock + ";" + newline;
-                  }
-                  output += ")";
-                  if (i+1 >= addedcount) {
-                        output += ";" + newline;
-                  }
-            });
-      }
-
-
-      if (outputMode === 1) {
-            var modifiedcount = modifiedRecipes.length;
-            modifiedRecipes.forEach((v,i) => {
-                  if (i === 0) {
-                        output += "ModifiedRecipes: (" + newline;
-                  } else {
-                        output += "," + newline + "(" + newline;
-                  }
-                  output += tab + "ItemID: " + v.id + ";" + newline;
-                  if (v.amount >= 0) {
-                        output += tab + "AmountCrafted: " + v.amount + ";" + newline;
-                  }
-                  var ingredientscount = v.ingredients.length;
-                  v.ingredients.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "Ingredients: " + newline + tab + "(" + newline;
-                        } else {
-                              output += "," + newline + tab + "(" + newline;
-                        }
-                        output += tab + tab + "ItemID: " + vv.id + ";" + newline;
-                        output += tab + tab + "Required: " + vv.amount + ";" + newline;
-                        output += tab + ")";
-                        if (ii+1 >= ingredientscount) {
-                              output += ";"+newline;
-                        }
-                  });
-                  var linkeditemscount = v.linkeditems.length;
-                  v.linkeditems.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "LinkedItemIDs: ";
-                        } else {
-                              output += ",";
-                        }
-                        output += vv;
-                        if (ii+1 >= linkeditemscount) {
-                              output += ";" + newline;
-                        }
-                  });
-                  var unlocksitemscount = v.unlocks.length;
-                  v.unlocks.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "Unlocks: ";
-                        } else {
-                              output += ",";
-                        }
-                        output += vv;
-                        if (ii+1 >= unlocksitemscount) {
-                              output += ";" + newline;
-                        }
-                  });
-                  if (v.forceunlockdefault !== true) {
-                        output += tab + "ForceUnlockAtStart: " + v.forceunlock + ";" + newline;
-                  }
-                  output += ")";
-                  if (i+1 >= modifiedcount) {
-                        output += ";" + newline;
-                  }
-            });
-      }
-
-      
-      if (outputMode === 2) {
-            var aliascount = aliasRecipes.length;
-            aliasRecipes.forEach((v,i) => {
-                  if (i === 0) {
-                        output += "AliasRecipes: (" + newline;
-                  } else {
-                        output += "," + newline + "(" + newline;
-                  }
-                  output += tab + "ItemID: " + v.id + ";" + newline;
-                  if (v.displayname !== "") {
-                        output += tab + "DisplayName: " + "\"" + v.displayname + "\"" + ";" + newline;
-                  }
-                  if (v.tooltip !== "") {
-                        output += tab + "Tooltip: " + "\"" + v.tooltip + "\"" + ";" + newline;
-                  }
-                  if (v.amount >= 0) {
-                        output += tab + "AmountCrafted: " + v.amount + ";" + newline;
-                  }
-                  var ingredientscount = v.ingredients.length;
-                  v.ingredients.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "Ingredients: " + newline + tab + "(" + newline;
-                        } else {
-                              output += "," + newline + tab + "(" + newline;
-                        }
-                        output += tab + tab + "ItemID: " + vv.id + ";" + newline;
-                        output += tab + tab + "Required: " + vv.amount + ";" + newline;
-                        output += tab + ")";
-                        if (ii+1 >= ingredientscount) {
-                              output += ";"+newline;
-                        }
-                  });
-                  var linkeditemscount = v.linkeditems.length;
-                  v.linkeditems.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "LinkedItemIDs: ";
-                        } else {
-                              output += ",";
-                        }
-                        output += vv;
-                        if (ii+1 >= linkeditemscount) {
-                              output += ";" + newline;
-                        }
-                  });
-                  var unlocksitemscount = v.unlocks.length;
-                  v.unlocks.forEach((vv,ii) => {
-                        if (ii === 0) {
-                              output += tab + "Unlocks: ";
-                        } else {
-                              output += ",";
-                        }
-                        output += vv;
-                        if (ii+1 >= unlocksitemscount) {
-                              output += ";" + newline;
-                        }
-                  });
-                  if (v.path !== "") {
-                        output += tab + "Path: " + v.path + ";" + newline;
-                  }
-                  if (v.forceunlockdefault !== true) {
-                        output += tab + "ForceUnlockAtStart: " + v.forceunlock + ";" + newline;
-                  }
-                  output += ")";
-                  if (i+1 >= aliascount) {
-                        output += ";" + newline;
-                  }
-            });
-      }
-
-
-      el.innerHTML = output;
-}
-
 window.onload = function() {
       document.getElementById("copy-output").onclick = copy_output;
       document.getElementById("add-confirm").onclick = new_recipe;
@@ -211,7 +8,25 @@ window.onload = function() {
       document.getElementById("change-to-modified").onclick = function() {change_mode(1)};
       document.getElementById("change-to-alias").onclick = function() {change_mode(2)};
       change_mode(0);
-      test();
+      outputData();
+}
+
+function outputData() {
+      var outp = document.getElementById("code-output");
+      var strings = "";
+      if (outputMode === 0) {
+            var __o = new RecipeData(_addedRecipes,1);
+            strings = toCString(__o);
+      }
+      if (outputMode === 1) {
+            var __o = new RecipeData(_modifiedRecipes,2);
+            strings = toCString(__o);
+      }
+      if (outputMode === 2) {
+            var __o = new RecipeData(_aliasRecipes,3);
+            strings = toCString(__o);
+      }
+      outp.innerHTML = strings;
 }
 
 function copy_output() {
@@ -237,13 +52,13 @@ function new_recipe() {
       var t_tooltip = document.getElementById("add-tooltip").value;
       var _recipe = new Recipe(t_id,t_amount,temp_Ingredients,temp_Linked,t_forceunlock,t_forceunlockdefault,temp_Unlock,t_path,t_displayname,t_tooltip);
       if (outputMode === 0) {
-            addedRecipes.push(_recipe);
+            _addedRecipes.push(_recipe);
       }
       if (outputMode === 1) {
-            modifiedRecipes.push(_recipe);
+            _modifiedRecipes.push(_recipe);
       }
       if (outputMode === 2) {
-            aliasRecipes.push(_recipe);
+            _aliasRecipes.push(_recipe);
       }
       temp_Ingredients = [];
       temp_Linked = [];
@@ -255,7 +70,7 @@ function new_recipe() {
       document.getElementById("add-path").value = "";
       document.getElementById("add-display").value = "";
       document.getElementById("add-tooltip").value = "";
-      test();
+      outputData();
 }
 
 function new_ingredient() {
@@ -291,44 +106,17 @@ function change_mode(m) {
       if (outputMode === 2) {
             el.innerHTML = "Output - AliasRecipe";
       }
-      test();
+      outputData();
 }
 
 // VARS
 
-var addedRecipes = [];
-var modifiedRecipes = [];
-var aliasRecipes = [];
+var _addedRecipes = [];
+var _modifiedRecipes = [];
+var _aliasRecipes = [];
 
 var temp_Ingredients = [];
 var temp_Linked = [];
 var temp_Unlock = [];
 
 var outputMode = 0;
-
-const newline = "\r\n";
-const tab = "    ";
-
-// CLASSES
-
-class Recipe {
-      constructor(id,amount,ingredients,linkeditems,forceunlock,forceunlockdefault,unlocks,path,displayname,tooltip) {
-            this.id = id;
-            this.amount = amount;
-            this.ingredients = ingredients;
-            this.linkeditems = linkeditems;
-            this.forceunlock = forceunlock;
-            this.forceunlockdefault = forceunlockdefault;
-            this.unlocks = unlocks; // MODIFIED END
-            this.path = path; // ADDED END
-            this.displayname = displayname;
-            this.tooltip = tooltip; // ALIAS END
-      }
-}
-
-class Ingredient {
-      constructor(id,amount) {
-            this.id = id;
-            this.amount = amount;
-      }
-}
