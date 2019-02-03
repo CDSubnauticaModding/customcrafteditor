@@ -28,7 +28,7 @@
             <button id="change-to-modified">ModifiedRecipe</button>
             <button id="change-to-alias">AliasRecipe</button>
             <br>
-            <input id="add-id" type="text" placeholder="ID">
+            <input id="add-id" type="text" placeholder="ID" list="item-ids-list">
             <input id="add-amount" type="number" min="-1" max="99" placeholder="Amount" value="0">
             <Label>Default ForceUnlock<input id="add-forceunlock-default" type="checkbox" checked="checked"></Label>
             <Label>Unlocks at Start<input id="add-forceunlock" type="checkbox" checked="checked"></Label>
@@ -37,24 +37,508 @@
             <input id="add-tooltip" type="text" placeholder="Tooltip">
             <button id="add-confirm">Add a recipe</button>
             <br>
-            <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="game_ids">
+            <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="item-ids-list">
             <input id="add-ingredient-amount" type="number" min="-1" max="99" placeholder="Ingredient Amount" value="1">
             <div id="ingredient-list"></div>
             <button id="add-ingredient-confirm">Add Ingredient</button>
-            <input id="add-linked-id" type="text" placeholder="Linked ID">
+            <input id="add-linked-id" type="text" placeholder="Linked ID" list="item-ids-list">
             <button id="add-linked-confirm">Add Linked</button>
-            <input id="add-unlock-id" type="text" placeholder="Unlock ID">
+            <input id="add-unlock-id" type="text" placeholder="Unlock ID" list="item-ids-list">
             <button id="add-unlock-confirm">Add Unlock</button>
 
 
 
-            <datalist id="game_ids">
-                        <option>Detroit Lions</option>
-                        <option>Detroit Pistons</option>
-                        <option>Detroit Red Wings</option>
-                        <option>Detroit Tigers</option>
-                        <!-- etc... -->
-                      </datalist>
+            <datalist id="item-ids-list">
+                  <!-- BASIC MATERIALS -->
+                  <option>titanium</option>
+                  <option>titaniumingot</option>
+                  <option>fibermesh</option>
+                  <option>silicone</option>
+                  <option>aluminumoxide</option>
+                  <option>glass</option>
+                  <option>bleach</option>
+                  <option>lubricant</option>
+                  <option>enameledglass</option>
+                  <option>plasteelingot</option>
+                  <!-- ADVANCED MATERIALS -->
+                  <option>hydrochloricacid</option>
+                  <option>benzene</option>
+                  <option>aramidfibers</option>
+                  <option>aerogel</option>
+                  <option>polyaniline</option>
+                  <!-- ELECTRONICS -->
+                  <option>copperwire</option>
+                  <option>battery</option>
+                  <option>powercell</option>
+                  <option>computerchip</option>
+                  <option>wiringkit</option>
+                  <option>advancedwiringkit</option>
+                  <option>reactorrod</option>
+                  <!-- WATER -->
+                  <option>filteredwater</option>
+                  <option>disinfectedwater</option>
+                  <!-- COOKED FOOD -->
+                  <option>cookedholefish</option>
+                  <option>cookedpeeper</option>
+                  <option>cookedbladderfish</option>
+                  <option>cookedgarryfish</option>
+                  <option>cookedhoverfish</option>
+                  <option>cookedreginald</option>
+                  <option>cookedspadefish</option>
+                  <option>cookedboomerang</option>
+                  <option>cookedlavaboomerang</option>
+                  <option>cookedeyeye</option>
+                  <option>cookedlavaeyeye</option>
+                  <option>cookedoculus</option>
+                  <option>cookedhoopfish</option>
+                  <option>cookedspinefish</option>
+                  <!-- CURED FOOD -->
+                  <option>curedholefish</option>
+                  <option>curedpeeper</option>
+                  <option>curedbladderfish</option>
+                  <option>curedgarryfish</option>
+                  <option>curedhoverfish</option>
+                  <option>curedreginald</option>
+                  <option>curedspadefish</option>
+                  <option>curedboomerang</option>
+                  <option>curedlavaboomerang</option>
+                  <option>curedeyeye</option>
+                  <option>curedlavaeyeye</option>
+                  <option>curedoculus</option>
+                  <option>curedhoopfish</option>
+                  <option>curedspinefish</option>
+                  <!-- EQUIPMENT -->
+                  <option>tank</option>
+                  <option>fins</option>
+                  <option>radiationsuit</option>
+                  <option>radiationgloves</option>
+                  <option>radiationhelmet</option>
+                  <option>reinforceddivesuit</option>
+                  <option>stillsuit</option>
+                  <option>firstaidkit</option>
+                  <option>fireextinguisher</option>
+                  <option>rebreather</option>
+                  <option>compass</option>
+                  <option>pipe</option>
+                  <option>pipesurfacefloater</option>
+                  <!-- TOOLS -->
+                  <option>scanner</option>
+                  <option>welder</option>
+                  <option>flashlight</option>
+                  <option>knife</option>
+                  <option>divereel</option>
+                  <option>airbladder</option>
+                  <option>flare</option>
+                  <option>builder</option>
+                  <option>lasercutter</option>
+                  <option>stasisrifle</option>
+                  <option>propulsioncannon</option>
+                  <option>ledlight</option>
+                  <option>transfuser</option>
+                  <!-- DEPLOYABLES -->
+                  <option>seaglide</option>
+                  <option>constructor</option>
+                  <option>beacon</option>
+                  <option>smallstorage</option>
+                  <option>gravsphere</option>
+                  <!-- SUBMARINE -->
+                  <option>cyclopshullmodule1</option>
+                  <!-- VEHICLES -->
+                  <option>seamoth</option>
+                  <option>sub cyclops</option>
+                  <option>exosuit</option>
+                  <!-- ROCKET-->
+                  <option>rocketbase</option>
+                  <!-- BATTERY UPGRADES -->
+                  <option>lithiumionbattery</option>
+                  <!-- SURVIVAL KNIFE -->
+                  <option>heatblade</option>
+                  <!-- STANDARD O2 TANK -->
+                  <option>plasteeltank</option>
+                  <option>highcapacitytank</option>
+                  <!-- FINS -->
+                  <option>ultraglidefins</option>
+                  <option>swimchargefins</option>
+                  <!-- PROPULSION CANNON -->
+                  <option>repulsioncannon</option>
+                  <!-- CYCLOPS UPGRADES -->
+                  <option>cyclopshullmodule2</option>
+                  <option>cyclopsfiresuppressionmodule</option>
+                  <!-- SEAMOTH UPGRADES -->
+                  <option>vehiclehullmodule2</option>
+                  <option>vehiclehullmodule3</option>
+                  <!-- COMMON MODULES -->
+                  <option>vehiclehullmodule1</option>
+                  <option>vehiclearmorplating</option>
+                  <option>vehiclepowerupgrademodule</option>
+                  <option>vehiclestoragemodule</option>
+                  <option>LootSensorMetal</option>
+                  <option>LootSensorLithium</option>
+                  <option>LootSensorFragment</option>
+                  <!-- SEAMOTH MODULES -->
+                  <option>seamothsolarcharge</option>
+                  <option>seamothelectricaldefense</option>
+                  <option>seamothtorpedomodule</option>
+                  <option>seamothsonarmodule</option>
+                  <!-- PRAWN SUIT MODULES -->
+                  <option>exosuitthermalreactormodule</option>
+                  <option>exosuitjetupgrademodule</option>
+                  <option>exosuitpropulsionarmmodule</option>
+                  <option>exosuitgrapplingarmmodule</option>
+                  <option>exosuitdrillarmmodule</option>
+                  <option>exosuittorpedoarmmodule</option>
+                  <!-- TORPEDOES -->
+                  <option>whirlpooltorpedo</option>
+                  <option>gastorpedo</option>
+                  <!-- BASE PIECES -->
+                  <option>basefoundation</option>
+                  <option>basecorridor</option>
+                  <option>basecorridorl</option>
+                  <option>basecorridort</option>
+                  <option>basecorridorx</option>
+                  <option>basecorridorglassi</option>
+                  <option>basecorridorglassl</option>
+                  <option>baseconnector</option>
+                  <option>baseroom</option>
+                  <option>basemaproom</option>
+                  <option>basemoonpool</option>
+                  <option>baseobservatory</option>
+                  <option>basehatch</option>
+                  <option>basewindow</option>
+                  <option>basereinforcement</option>
+                  <!-- EXTERIOR MODULES -->
+                  <option>solarpanel</option>
+                  <option>thermalplant</option>
+                  <option>powertransmitter</option>
+                  <option>techlight</option>
+                  <option>spotlight</option>
+                  <option>farmingtray</option>
+                  <option>basepipeconnector</option>
+                  <!-- INTERIOR PIECES -->
+                  <option>baseladder</option>
+                  <option>basefiltrationmachine</option>
+                  <option>basebulkhead</option>
+                  <option>baseupgradeconsole</option>
+                  <option>basebioreactor</option>
+                  <option>basenuclearreactor</option>
+                  <option>basewaterpark</option>
+                  <!-- INTERIOR MODULES -->
+                  <option>fabricator</option>
+                  <option>radio</option>
+                  <option>medicalcabinet</option>
+                  <option>smalllocker</option>
+                  <option>locker</option>
+                  <option>batterycharger</option>
+                  <option>powercellcharger</option>
+                  <option>aquarium</option>
+                  <option>workbench</option>
+                  <option>planterpot</option>
+                  <option>planterpot2</option>
+                  <option>planterpot3</option>
+                  <option>planterbox</option>
+                  <option>plantershelf</option>
+                  <!-- MISCELLANEOUS -->
+                  <option>bench</option>
+                  <option>bed1</option>
+                  <option>bed2</option>
+                  <option>narrowbed</option>
+                  <option>starshipdesk</option>
+                  <option>starshipchair</option>
+                  <option>starshipchair2</option>
+                  <option>starshipchair3</option>
+                  <option>sign</option>
+                  <option>pictureframe</option>
+                  <option>bartable</option>
+                  <option>trashcans</option>
+                  <option>labtrashcan</option>
+                  <option>vendingmachine</option>
+                  <option>labcounter</option>
+                  <option>baseplanter</option>
+                  <option>singlewallshelf</option>
+                  <option>wallshelves</option>
+                  <!-- SCANNER ROOM FABRICATOR -->
+                  <option>maproomhudchip</option>
+                  <option>maproomcamera</option>
+                  <option>maproomupgradescanrange</option>
+                  <option>maproomupgradescanspeed</option>
+                  <!-- BYPRODUCTS -->
+                  <option>stillsuitwater</option>
+                  <option>bigfilteredwater</option>
+                  <option>depletedreactorrod</option>
+                  <!-- FRAGMENTS -->
+                  <option>baseroomfragment</option>
+                  <option>baseobservatoryfragment</option>
+                  <option>basemaproomfragment</option>
+                  <option>moonpoolfragment</option>
+                  <option>powertransmitterfragment</option>
+                  <option>solarpanelfragment</option>
+                  <option>thermalplantfragment</option>
+                  <option>basewaterparkfragment</option>
+                  <!--<option>basefiltrationmachine</option>-->
+                  <option>baseupgradeconsolefragment</option>
+                  <option>basebulkheadfragment</option>
+                  <option>bioreactorfragment</option>
+                  <option>nuclearreactorfragment</option>
+                  <option>workbenchfragment</option>
+                  <option>powercellchargerfragment</option>
+                  <option>batterychargerfragment</option>
+                  <option>stillsuitfragment</option>
+                  <option>reinforceddivesuitfragment</option>
+                  <option>stasisriflefragment</option>
+                  <option>propulsioncannonfragment</option>
+                  <option>ledlightfragment</option>
+                  <option>transfuserfragment</option>
+                  <option>seaglidefragment</option>
+                  <option>constructorfragment</option>
+                  <option>seamothfragment</option>
+                  <option>exosuitfragment</option>
+                  <option>cyclopsbridgefragment</option>
+                  <option>cyclopshullfragment</option>
+                  <option>cyclopsenginefragment</option>
+                  <option>reinfrocedhullfragment</option>
+                  <option>exosuittorpedoarmfragment</option>
+                  <option>exosuitgrapplingarmfragment</option>
+                  <option>exosuitdrillarmfragment</option>
+                  <option>exosuitpropulsionarmfragment</option>
+                  <!-- PLACEABLE ITEMS -->
+                  <option>coffeevendingmachine</option>
+                  <option>labequipment1</option>
+                  <option>labequipment2</option>
+                  <option>labequipment3</option>
+                  <option>luggagebag</option>
+                  <option>poster</option>
+                  <option>posterexosuit1</option>
+                  <option>posterexosuit2</option>
+                  <option>posterkitty</option>
+                  <option>posteraurora</option>
+                  <option>starshipsouvenir</option>
+                  <option>arcadegorgetoy</option>
+                  <option>cap1</option>
+                  <option>cap2</option>
+                  <option>labcontainer</option>
+                  <option>labcontainer2</option>
+                  <option>labcontainer3</option>
+                  <!-- MATERIALS -->
+                  <!--<option>aluminumoxide</option>-->
+                  <option>enzymecureball</option>
+                  <option>copper</option>
+                  <option>crashpowder</option>
+                  <option>diamond</option>
+                  <option>gold</option>
+                  <option>gaspod</option>
+                  <option>kyanite</option>
+                  <option>lead</option>
+                  <option>lithium</option>
+                  <option>magnetite</option>
+                  <option>scrapmetal</option>
+                  <option>mercuryore</option>
+                  <option>quartz</option>
+                  <option>salt</option>
+                  <option>seatreaderpoop</option>
+                  <option>silver</option>
+                  <option>stalkertooth</option>
+                  <option>sulphur</option>
+                  <option>uraninitecrystal</option>
+                  <!-- LARGE RESOURCE DEPOSITS -->
+                  <option>drillablecopper</option>
+                  <option>drillablediamond</option>
+                  <option>drillablegold</option>
+                  <option>drillablekyanite</option>
+                  <option>drillablelead</option>
+                  <option>drillablelithium</option>
+                  <option>drillablemagnetite</option>
+                  <option>drillablequartz</option>
+                  <option>drillablesalt</option>
+                  <option>drillablesilver</option>
+                  <option>drillabletitanium</option>
+                  <option>drillableuraninite</option>
+                  <!-- HARVESTING NODE -->
+                  <option>limestonechunk</option>
+                  <option>sandstonechunk</option>
+                  <option>shalechunk</option>
+                  <!-- SAMPLES -->
+                  <option>jeweleddiskpiece</option>
+                  <option>treemushroompiece</option>
+                  <option>purplebraincoralpiece</option>
+                  <option>coralchunk</option>
+                  <!-- CARNIVORES -->
+                  <option>shocker</option>
+                  <option>biter</option>
+                  <option>blighter</option>
+                  <option>boneshark</option>
+                  <option>crabsnake</option>
+                  <option>crabsquid</option>
+                  <option>crash</option>
+                  <option>lavalizard</option>
+                  <option>mesmer</option>
+                  <option>reaperleviathan</option>
+                  <option>seadragon</option>
+                  <option>sandshark</option>
+                  <option>stalker</option>
+                  <option>warper</option>
+                  <!-- HERBIVORES -->
+                  <option>bladderfish</option>
+                  <option>boomerang</option>
+                  <option>ghostrayred</option>
+                  <option>cutefish</option>
+                  <option>eyeye</option>
+                  <option>garryfish</option>
+                  <option>gasopod</option>
+                  <option>ghostrayblue</option>
+                  <option>holefish</option>
+                  <option>hoopfish</option>
+                  <option>hoverfish</option>
+                  <option>jellyray</option>
+                  <option>lavaboomerang</option>
+                  <option>oculus</option>
+                  <option>peeper</option>
+                  <option>rabbitray</option>
+                  <option>lavaeyeye</option>
+                  <option>reefback</option>
+                  <option>reginald</option>
+                  <option>seatreader</option>
+                  <option>spadefish</option>
+                  <option>spinefish</option>
+                  <!-- SCAVENGERS AND PARASITES -->
+                  <option>bleeder</option>
+                  <option>shuttlebug</option>
+                  <option>cavecrawler</option>
+                  <option>floater</option>
+                  <option>lavalarva</option>
+                  <option>rockgrub</option>
+                  <option>jumper</option>
+                  <!-- EGGS -->
+                  <option>shockeregg</option>
+                  <option>bonesharkegg</option>
+                  <option>crabsnakeegg</option>
+                  <option>crashegg</option>
+                  <option>gasopodegg</option>
+                  <option>jellyrayegg</option>
+                  <option>mesmeregg</option>
+                  <option>rabbitrayegg</option>
+                  <option>reefbackegg</option>
+                  <option>sandsharkegg</option>
+                  <option>jumperegg</option>
+                  <option>spadefishegg</option>
+                  <option>stalkeregg</option>
+                  <!-- PLANTS -->
+                  <option>acidmushroom</option>
+                  <option>bloodroot</option>
+                  <option>bloodgrass</option>
+                  <option>bloodvine</option>
+                  <option>bluepalm</option>
+                  <option>bulbotree</option>
+                  <option>purplebranches</option>
+                  <option>purplevegetableplant</option>
+                  <option>crashhome</option>
+                  <option>whitemushroom</option>
+                  <option>hangingstinger</option>
+                  <option>eyesplant</option>
+                  <option>fernpalm</option>
+                  <option>redrollplant</option>
+                  <option>gabesfeather</option>
+                  <option>jellyplant</option>
+                  <option>redgreententacle</option>
+                  <option>greengrass</option>
+                  <option>covetree</option>
+                  <option>bluecluster</option>
+                  <option>orangepetalsplant</option>
+                  <option>orangemushroom</option>
+                  <option>snakemushroom</option>
+                  <option>smallkoosh</option>
+                  <option>mediumkoosh</option>
+                  <option>largekoosh</option>
+                  <option>hugekoosh</option>
+                  <option>hangingfruittree</option>
+                  <option>melon</option>
+                  <option>smallmelon</option>
+                  <option>membraintree</option>
+                  <option>purplevaseplant</option>
+                  <option>mohawk</option>
+                  <option>pinkmushroom</option>
+                  <option>smallfanseed</option>
+                  <option>redbush</option>
+                  <option>redconeplantseed</option>
+                  <option>redbasketplantseed</option>
+                  <option>seacrownseed</option>
+                  <option>purplerattle</option>
+                  <option>shellgrass</option>
+                  <option>spottedleavesplant</option>
+                  <option>greenreeds</option>
+                  <option>spikeplant</option>
+                  <option>barnaclesuckers</option>
+                  <option>purplefan</option>
+                  <option>purplestalk</option>
+                  <option>pinkflower</option>
+                  <option>purpletentacle</option>
+                  <!-- SEEDS AND SPORES -->
+                  <option>acidmushroomspore</option>
+                  <option>bloodoil</option>
+                  <option>bluepalmseed</option>
+                  <option>purplebranchesseed</option>
+                  <option>creepvinepiece</option>
+                  <option>creepvineseedcluster</option>
+                  <option>whitemushroomspore</option>
+                  <option>eyesplantseed</option>
+                  <option>redrollplantseed</option>
+                  <option>gabesfeatherseed</option>
+                  <option>jellyplantseed</option>
+                  <option>redgreententacleseed</option>
+                  <option>snakemushroomspore</option>
+                  <option>kooshchunk</option>
+                  <option>membraintreeseed</option>
+                  <option>smallfanseed</option>
+                  <option>redbushseed</option>
+                  <option>redconeplantseed</option>
+                  <option>redbasketplantseed</option>
+                  <option>seacrownseed</option>
+                  <option>shellgrassseed</option>
+                  <option>spottedleavesplantseed</option>
+                  <option>spikeplantseed</option>
+                  <option>purplefanseed</option>
+                  <option>purplestalkseed</option>
+                  <option>purpletentacleseed</option>
+                  <option>bulbotreepiece</option>
+                  <option>purplevegetable</option>
+                  <option>fernpalmseed</option>
+                  <option>orangepetalsplantseed</option>
+                  <option>orangemushroomspore</option>
+                  <option>hangingfruit</option>
+                  <option>melonseed</option>
+                  <option>purplevaseplantseed</option>
+                  <option>pinkmushroomspore</option>
+                  <option>purplerattlespore</option>
+                  <option>pinkflowerseed</option>
+                  <!-- MISC -->
+                  <option>bloom</option>
+                  <option>precursorkey_red</option>
+                  <option>precursorkey_blue</option>
+                  <option>precursorkey_orange</option>
+                  <option>precursorkey_white</option>
+                  <option>precursorkey_purple</option>
+                  <option>precursorkeys</option>
+                  <option>hatchingenzymes</option>
+                  <option>precursorioncrystal</option>
+                  <option>spineeel</option>
+                  <option>seaemperor</option>
+                  <option>seaemperorbaby</option>
+                  <option>hoopfishschool</option>
+                  <option>skyray</option>
+                  <option>grandreefsegg</option>
+                  <option>grassyplateausegg</option>
+                  <option>kelpforestegg</option>
+                  <option>kooshzoneegg</option>
+                  <option>lavazoneegg</option>
+                  <option>mushroomforestegg</option>
+                  <option>safeshallowsegg</option>
+                  <option>twistybridgesegg</option>
+                  <option>nanowires</option>
+                  <option>aminoacids</option>
+                  <option>opalgem</option>
+                  <option>nutrientblock</option>
+                  <option>powerupgrademodule</option>
+                  <!--  -->
+            </datalist>
       </body>
       <footer>
             
