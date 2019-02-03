@@ -9,6 +9,7 @@ function parseString(input) {
       var addedRecipes = [];
       var modifiedRecipes = [];
       var aliasRecipes = [];
+      var customCraftingTabs = [];
 
       var currentFieldCheck = "";
       var currentFieldGetValueNow = false;
@@ -24,7 +25,7 @@ function parseString(input) {
       input_array.forEach((c,i) => {
             if (!canceled) {
                   if (c !== "#" && !currentlineComment) {
-                        if (input_mode !== 1 && input_mode !== 2 && input_mode !== 3) {
+                        if (input_mode !== 1 && input_mode !== 2 && input_mode !== 3 && input_mode !== 4) {
                               if (c == " " || c == "\n") {
       
                               } else if (c == ":") {
@@ -55,6 +56,15 @@ function parseString(input) {
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
                                           input_mode = 3;
+                                    } else if (currentFieldCheck == "CustomCraftingTabs") {
+                                          currentFieldCheck = "";
+                                          currentFieldGetValueNow = false;
+                                          currentFieldValue = "";
+                                          
+                                          currentInnerField = "";
+                                          currentInnerFieldGetValueNow = false;
+                                          currentInnerFieldValue = "";
+                                          input_mode = 4;
                                     } else {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
@@ -63,71 +73,52 @@ function parseString(input) {
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
-                                          output += "CANCELED";
                                           canceled = true;
                                     }
                               } else {
                                     currentFieldCheck += c;
                               }
                         } else {
-                              if (openBrackets == 0) {
-                                    if (c == " " || c == "\n") {
+                              if (input_mode === 1 || input_mode === 2 || input_mode === 3) {
+                                    if (openBrackets == 0) {
+                                          if (c == " " || c == "\n") {
 
-                                    } else if (c == "(") {
-                                          currentObject = new Recipe("",0,[],[],true,true,[],"","","");
-                                          openBrackets ++;
-                                    } else {
+                                          } else if (c == "(") {
+                                                currentObject = new Recipe("",0,[],[],true,true,[],"","","");
+                                                openBrackets ++;
+                                          } else {
 
-                                    }
-                              } else if (openBrackets == 1 || openBrackets == 2) {
-                                    if (openBrackets == 1 && c == ")") {
-                                          openBrackets --;
-                                          if (input_mode == 1) {
-                                                addedRecipes.push(currentObject);
-                                          } else if (input_mode == 2) {
-                                                modifiedRecipes.push(currentObject);
-                                          } else if (input_mode == 3) {
-                                                aliasRecipes.push(currentObject);
                                           }
-                                          currentObject = null;
-                                          currentFieldCheck = "";
-                                          currentFieldGetValueNow = false;
-                                          currentFieldValue = "";
-                                          
-                                          currentInnerField = "";
-                                          currentInnerFieldGetValueNow = false;
-                                          currentInnerFieldValue = "";
-                                    } else {
-                                          if (currentFieldCheck == "") {
-                                                if (c == " " || c == "\n" || c == ":" || c == ";") {
-                                                      if (c == ":" || c == ";") {
+                                    } else if (openBrackets == 1 || openBrackets == 2) {
+                                          if (openBrackets == 1 && c == ")") {
+                                                openBrackets --;
+                                                if (input_mode == 1) {
+                                                      addedRecipes.push(currentObject);
+                                                } else if (input_mode == 2) {
+                                                      modifiedRecipes.push(currentObject);
+                                                } else if (input_mode == 3) {
+                                                      aliasRecipes.push(currentObject);
+                                                }
+                                                currentObject = null;
+                                                currentFieldCheck = "";
+                                                currentFieldGetValueNow = false;
+                                                currentFieldValue = "";
+                                                
+                                                currentInnerField = "";
+                                                currentInnerFieldGetValueNow = false;
+                                                currentInnerFieldValue = "";
+                                          } else {
+                                                if (currentFieldCheck == "") {
+                                                      if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                            if (c == ":" || c == ";") {
 
+                                                            }
+                                                      } else {
+                                                            currentFieldCheck += c;
                                                       }
                                                 } else {
-                                                      currentFieldCheck += c;
-                                                }
-                                          } else {
-                                                if (!currentFieldGetValueNow) {
-                                                      if (c == " " || c == "\n") {
-                                                            currentFieldCheck = "";
-                                                            currentFieldGetValueNow = false;
-                                                            currentFieldValue = "";
-                                                            
-                                                            currentInnerField = "";
-                                                            currentInnerFieldGetValueNow = false;
-                                                            currentInnerFieldValue = "";
-                                                      } else if (c == ";") {
-                                                            currentFieldCheck = "";
-                                                            currentFieldGetValueNow = false;
-                                                            currentFieldValue = "";
-                                                            
-                                                            currentInnerField = "";
-                                                            currentInnerFieldGetValueNow = false;
-                                                            currentInnerFieldValue = "";
-                                                      } else if (c == ":") {
-                                                            if (currentFieldCheck == "ItemID" || currentFieldCheck == "DisplayName" || currentFieldCheck == "Tooltip" || currentFieldCheck == "AmountCrafted" || currentFieldCheck == "Ingredients" || currentFieldCheck == "LinkedItemIDs" || currentFieldCheck == "Unlocks" || currentFieldCheck == "Path" || currentFieldCheck == "ForceUnlockAtStart") {
-                                                                  currentFieldGetValueNow = true;
-                                                            } else {
+                                                      if (!currentFieldGetValueNow) {
+                                                            if (c == " " || c == "\n") {
                                                                   currentFieldCheck = "";
                                                                   currentFieldGetValueNow = false;
                                                                   currentFieldValue = "";
@@ -135,14 +126,18 @@ function parseString(input) {
                                                                   currentInnerField = "";
                                                                   currentInnerFieldGetValueNow = false;
                                                                   currentInnerFieldValue = "";
-                                                            }
-                                                      } else {
-                                                            currentFieldCheck += c;
-                                                      }
-                                                } else {
-                                                      if (currentFieldValue === "") {
-                                                            if (c == " " || c == "\n" || c == ":" || c == ";") {
-                                                                  if (c == ";") {
+                                                            } else if (c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ":") {
+                                                                  if (currentFieldCheck == "ItemID" || currentFieldCheck == "DisplayName" || currentFieldCheck == "Tooltip" || currentFieldCheck == "AmountCrafted" || currentFieldCheck == "Ingredients" || currentFieldCheck == "LinkedItemIDs" || currentFieldCheck == "Unlocks" || currentFieldCheck == "Path" || currentFieldCheck == "ForceUnlockAtStart") {
+                                                                        currentFieldGetValueNow = true;
+                                                                  } else {
                                                                         currentFieldCheck = "";
                                                                         currentFieldGetValueNow = false;
                                                                         currentFieldValue = "";
@@ -152,40 +147,290 @@ function parseString(input) {
                                                                         currentInnerFieldValue = "";
                                                                   }
                                                             } else {
-                                                                  if (currentFieldCheck == "Ingredients") {
-                                                                        currentFieldValue = [];
-                                                                        if (c == " " || c == "\n") {
-                                                                              
-                                                                        } else if (c == "(") {
-                                                                              openBrackets ++;
-                                                                              currentIngredient = new Ingredient("",0);
-                                                                              currentInnerField = "";
-                                                                              currentInnerFieldGetValueNow = false;
-                                                                              currentInnerFieldValue = "";
-                                                                        } else if (c == ";") {
+                                                                  currentFieldCheck += c;
+                                                            }
+                                                      } else {
+                                                            if (currentFieldValue === "") {
+                                                                  if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                                        if (c == ";") {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              currentIngredient = null;
+                                                                              
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
+                                                                        }
+                                                                  } else {// ftgdfgdfgdfgdfg
+                                                                        if (currentFieldCheck == "Ingredients") {
+                                                                              currentFieldValue = [];
+                                                                              if (c == " " || c == "\n") {
+                                                                                    
+                                                                              } else if (c == "(") {
+                                                                                    openBrackets ++;
+                                                                                    currentIngredient = new Ingredient("",0);
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              } else if (c == ";") {
+                                                                                    currentFieldCheck = "";
+                                                                                    currentFieldGetValueNow = false;
+                                                                                    currentFieldValue = "";
+                                                                                    currentIngredient = null;
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              } else {
+                                                                                    currentFieldCheck = "";
+                                                                                    currentFieldGetValueNow = false;
+                                                                                    currentFieldValue = "";
+                                                                                    currentIngredient = null;
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              }
+                                                                        } else if (currentFieldCheck == "LinkedItemIDs" || currentFieldCheck == "Unlocks") {
+                                                                              currentFieldValue = [];
+                                                                              if (c == "\"") {
+                                                                                    currentFieldCheck = "";
+                                                                                    currentFieldGetValueNow = false;
+                                                                                    currentFieldValue = "";
+                                                                                    currentIngredient = null;
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              } else if (c == ",") {
+                                                                                    if  (currentInnerField == "") {
+
+                                                                                    } else {
+                                                                                          currentFieldValue.push(currentInnerField);
+                                                                                          currentInnerField = "";
+                                                                                    }
+                                                                              } else {
+                                                                                    currentInnerField += c;
+                                                                              }
+                                                                        } else if (currentFieldCheck == "DisplayName" || currentFieldCheck == "Tooltip") {
+                                                                              currentFieldValue = "";
+                                                                              if (c == "\"") {
+                                                                                    
+                                                                              } else {
+                                                                                    currentFieldValue += c;
+                                                                              }
+                                                                        } else {
+                                                                              currentFieldValue += c;
+                                                                        }
+                                                                  }
+                                                            } else {
+                                                                  if (currentFieldCheck == "Ingredients") {
+                                                                        if (openBrackets == 2) {
+                                                                              if (currentInnerField == "") {
+                                                                                    if (c == ")") {
+                                                                                          currentFieldValue.push(currentIngredient);
+                                                                                          
+                                                                                          currentIngredient = null;
+                                                                                          currentInnerField = "";
+                                                                                          currentInnerFieldGetValueNow = false;
+                                                                                          currentInnerFieldValue = "";
+                                                                                          openBrackets --;
+                                                                                    } else if (c == " " || c == "\n") {
+
+                                                                                    } else if (c == ";" || c == ":") {
+                                                                                          currentInnerField = "";
+                                                                                          currentInnerFieldGetValueNow = false;
+                                                                                          currentInnerFieldValue = "";
+                                                                                    } else {
+                                                                                          currentInnerField += c;
+                                                                                    }
+                                                                              } else {
+                                                                                    if (!currentInnerFieldGetValueNow) {
+                                                                                          if (c == ")") {
+                                                                                                if (currentInnerField !== "" && currentInnerFieldValue !== "") {
+                                                                                                      if (currentInnerField == "ItemID") {
+                                                                                                            currentIngredient.id = currentInnerFieldValue;
+                                                                                                      } else if (currentInnerField == "Required") {
+                                                                                                            currentIngredient.amount = currentInnerFieldValue;
+                                                                                                      }
+                                                                                                }
+                                                                                                currentFieldValue.push(currentIngredient);
+                                                                                                
+                                                                                                currentIngredient = null;
+                                                                                                currentInnerField = "";
+                                                                                                currentInnerFieldGetValueNow = false;
+                                                                                                currentInnerFieldValue = "";
+                                                                                                openBrackets--;
+                                                                                          } else if (c == " " || c == "\n") {
+                                                                                                currentInnerField = "";
+                                                                                                currentInnerFieldGetValueNow = false;
+                                                                                                currentInnerFieldValue = "";
+                                                                                          } else if (c == ";") {
+                                                                                                currentInnerField = "";
+                                                                                                currentInnerFieldGetValueNow = false;
+                                                                                                currentInnerFieldValue = "";
+                                                                                          } else if (c == ":") {
+                                                                                                if (currentInnerField == "ItemID" || currentInnerField == "Required") {
+                                                                                                      currentInnerFieldGetValueNow = true;
+                                                                                                } else {
+                                                                                                      
+                                                                                                      currentInnerField = "";
+                                                                                                      currentInnerFieldGetValueNow = false;
+                                                                                                      currentInnerFieldValue = "";
+                                                                                                }
+                                                                                          }else {
+                                                                                                currentInnerField += c;
+                                                                                          }
+                                                                                    } else {
+                                                                                          if (currentInnerFieldValue === "") {
+                                                                                                if (c == ")") {
+                                                                                                      currentFieldValue.push(currentIngredient);
+                                                                                                      
+                                                                                                      currentIngredient = null;
+                                                                                                      currentInnerField = "";
+                                                                                                      currentInnerFieldGetValueNow = false;
+                                                                                                      currentInnerFieldValue = "";
+                                                                                                      openBrackets--;
+                                                                                                } else if (c == " ") {
+                                                                                                      
+                                                                                                } else if (c == "\n") {
+                                                                                                      currentInnerField = "";
+                                                                                                      currentInnerFieldGetValueNow = false;
+                                                                                                      currentInnerFieldValue = "";
+                                                                                                } else if (c == ";") {
+                                                                                                      if (currentInnerField == "ItemID" || currentInnerField == "Required") {
+                                                                                                            if (currentInnerField == "ItemID") {
+                                                                                                                  currentIngredient.id = currentInnerFieldValue;
+                                                                                                            } else if (currentInnerField == "Required") {
+                                                                                                                  currentIngredient.amount = currentInnerFieldValue;
+                                                                                                            }
+                                                                                                            currentInnerField = "";
+                                                                                                            currentInnerFieldGetValueNow = false;
+                                                                                                            currentInnerFieldValue = "";
+                                                                                                      } else {
+                                                                                                            currentInnerField = "";
+                                                                                                            currentInnerFieldGetValueNow = false;
+                                                                                                            currentInnerFieldValue = "";
+                                                                                                      }
+                                                                                                } else if (c == ":") {
+                                                                                                      
+                                                                                                }else {
+                                                                                                      currentInnerFieldValue += c;
+                                                                                                }
+                                                                                          } else {
+                                                                                                if (c == ")") {
+                                                                                                      if (currentInnerField != "" && currentInnerFieldValue != "") {
+                                                                                                            if (currentInnerField == "ItemID") {
+                                                                                                                  currentIngredient.id = currentInnerFieldValue;
+                                                                                                            } else if (currentInnerField == "Required") {
+                                                                                                                  currentIngredient.amount = currentInnerFieldValue;
+                                                                                                            }
+                                                                                                      }
+                                                                                                      currentFieldValue.push(currentFieldValue);
+
+                                                                                                      currentIngredient = null;
+                                                                                                      currentInnerField = "";
+                                                                                                      currentInnerFieldGetValueNow = false;
+                                                                                                      currentInnerFieldValue = "";
+                                                                                                      openBrackets--;
+                                                                                                } else if (c == " " || c == "\n") {
+                                                                                                      if (currentInnerField != "" && currentInnerFieldValue != "") {
+                                                                                                            if (currentInnerField == "ItemID") {
+                                                                                                                  currentIngredient.id = currentInnerFieldValue;
+                                                                                                            } else if (currentInnerField == "Required") {
+                                                                                                                  currentIngredient.amount = currentInnerFieldValue;
+                                                                                                            }
+                                                                                                      }
+                                                                                                      currentInnerField = "";
+                                                                                                      currentInnerFieldGetValueNow = false;
+                                                                                                      currentInnerFieldValue = "";
+                                                                                                } else if (c == ";") {
+                                                                                                      if (currentInnerField == "ItemID" || currentInnerField == "Required") {
+                                                                                                            if (currentInnerField == "ItemID") {
+                                                                                                                  currentIngredient.id = currentInnerFieldValue;
+                                                                                                            } else if (currentInnerField == "Required") {
+                                                                                                                  currentIngredient.amount = currentInnerFieldValue;
+                                                                                                            }
+                                                                                                            currentInnerField = "";
+                                                                                                            currentInnerFieldGetValueNow = false;
+                                                                                                            currentInnerFieldValue = "";
+                                                                                                      } else {
+                                                                                                            currentInnerField = "";
+                                                                                                            currentInnerFieldGetValueNow = false;
+                                                                                                            currentInnerFieldValue = "";
+                                                                                                      }
+                                                                                                } else if (c == ":") {
+                                                                                                      
+                                                                                                }else {
+                                                                                                      currentInnerFieldValue += c;
+                                                                                                }
+                                                                                          }
+                                                                                    }
+                                                                              }
+                                                                        } else if (openBrackets == 1) {
+                                                                              if (c == " " || c == "\n") {
+                                                                                    
+                                                                              } else if (c == "(") {
+                                                                                    openBrackets ++;
+                                                                                    currentIngredient = new Ingredient("",0);
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              } else if (c == ";") {
+                                                                                    currentObject.ingredients = currentFieldValue;
+                                                                                    currentIngredient = null;
+                                                                                    currentFieldCheck = "";
+                                                                                    currentFieldGetValueNow = false;
+                                                                                    currentFieldValue = "";
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              } else if (c == ",") {
+
+                                                                              } else {
+                                                                                    currentFieldCheck = "";
+                                                                                    currentFieldGetValueNow = false;
+                                                                                    currentFieldValue = "";
+                                                                                    currentInnerField = "";
+                                                                                    currentInnerFieldGetValueNow = false;
+                                                                                    currentInnerFieldValue = "";
+                                                                              }
                                                                         } else {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              currentIngredient = null;
+                                                                              
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
                                                                         }
                                                                   } else if (currentFieldCheck == "LinkedItemIDs" || currentFieldCheck == "Unlocks") {
-                                                                        currentFieldValue = [];
-                                                                        if (c == "\"") {
+                                                                        if (c == " " || c == "\n") {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              currentIngredient = null;
+                                                                              
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        } else if (c == ";") {
+                                                                              if (currentInnerField != "") {
+                                                                                    currentFieldValue.push(currentInnerField);
+                                                                              }
+                                                                              if (currentFieldCheck == "LinkedItemIDs") {
+                                                                                    currentObject.linkeditems = currentFieldValue;
+                                                                              } else if (currentFieldCheck == "Unlocks") {
+                                                                                    currentObject.unlocks = currentFieldValue;
+                                                                              }
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        } else if (c == "\"") {
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -200,295 +445,197 @@ function parseString(input) {
                                                                               currentInnerField += c;
                                                                         }
                                                                   } else if (currentFieldCheck == "DisplayName" || currentFieldCheck == "Tooltip") {
-                                                                        currentFieldValue = "";
-                                                                        if (c == "\"") {
+                                                                        if (c == ";") {
+                                                                              if (currentFieldCheck == "DisplayName") {
+                                                                                    currentObject.displayname = currentFieldValue;
+                                                                              } else if (currentFieldCheck == "Tooltip") {
+                                                                                    currentObject.tooltip = currentFieldValue;
+                                                                              }
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        } else if (c == "\"") {
                                                                               
                                                                         } else {
                                                                               currentFieldValue += c;
                                                                         }
                                                                   } else {
-                                                                        currentFieldValue += c;
-                                                                  }
-                                                            }
-                                                      } else {
-                                                            if (currentFieldCheck == "Ingredients") {
-                                                                  if (openBrackets == 2) {
-                                                                        if (currentInnerField == "") {
-                                                                              if (c == ")") {
-                                                                                    currentFieldValue.push(currentIngredient);
-                                                                                    
-                                                                                    currentIngredient = null;
-                                                                                    currentInnerField = "";
-                                                                                    currentInnerFieldGetValueNow = false;
-                                                                                    currentInnerFieldValue = "";
-                                                                                    openBrackets --;
-                                                                              } else if (c == " " || c == "\n") {
-
-                                                                              } else if (c == ";" || c == ":") {
-                                                                                    currentInnerField = "";
-                                                                                    currentInnerFieldGetValueNow = false;
-                                                                                    currentInnerFieldValue = "";
-                                                                              } else {
-                                                                                    currentInnerField += c;
-                                                                              }
-                                                                        } else {
-                                                                              if (!currentInnerFieldGetValueNow) {
-                                                                                    if (c == ")") {
-                                                                                          if (currentInnerField !== "" && currentInnerFieldValue !== "") {
-                                                                                                if (currentInnerField == "ItemID") {
-                                                                                                      currentIngredient.id = currentInnerFieldValue;
-                                                                                                } else if (currentInnerField == "Required") {
-                                                                                                      currentIngredient.amount = currentInnerFieldValue;
-                                                                                                }
-                                                                                          }
-                                                                                          currentFieldValue.push(currentIngredient);
-                                                                                          
-                                                                                          currentIngredient = null;
-                                                                                          currentInnerField = "";
-                                                                                          currentInnerFieldGetValueNow = false;
-                                                                                          currentInnerFieldValue = "";
-                                                                                          openBrackets--;
-                                                                                    } else if (c == " " || c == "\n") {
-                                                                                          currentInnerField = "";
-                                                                                          currentInnerFieldGetValueNow = false;
-                                                                                          currentInnerFieldValue = "";
-                                                                                    } else if (c == ";") {
-                                                                                          currentInnerField = "";
-                                                                                          currentInnerFieldGetValueNow = false;
-                                                                                          currentInnerFieldValue = "";
-                                                                                    } else if (c == ":") {
-                                                                                          if (currentInnerField == "ItemID" || currentInnerField == "Required") {
-                                                                                                currentInnerFieldGetValueNow = true;
-                                                                                          } else {
-                                                                                                
-                                                                                                currentInnerField = "";
-                                                                                                currentInnerFieldGetValueNow = false;
-                                                                                                currentInnerFieldValue = "";
-                                                                                          }
-                                                                                    }else {
-                                                                                          currentInnerField += c;
-                                                                                    }
-                                                                              } else {
-                                                                                    if (currentInnerFieldValue === "") {
-                                                                                          if (c == ")") {
-                                                                                                currentFieldValue.push(currentIngredient);
-                                                                                                
-                                                                                                currentIngredient = null;
-                                                                                                currentInnerField = "";
-                                                                                                currentInnerFieldGetValueNow = false;
-                                                                                                currentInnerFieldValue = "";
-                                                                                                openBrackets--;
-                                                                                          } else if (c == " ") {
-                                                                                                
-                                                                                          } else if (c == "\n") {
-                                                                                                currentInnerField = "";
-                                                                                                currentInnerFieldGetValueNow = false;
-                                                                                                currentInnerFieldValue = "";
-                                                                                          } else if (c == ";") {
-                                                                                                if (currentInnerField == "ItemID" || currentInnerField == "Required") {
-                                                                                                      if (currentInnerField == "ItemID") {
-                                                                                                            currentIngredient.id = currentInnerFieldValue;
-                                                                                                      } else if (currentInnerField == "Required") {
-                                                                                                            currentIngredient.amount = currentInnerFieldValue;
-                                                                                                      }
-                                                                                                      currentInnerField = "";
-                                                                                                      currentInnerFieldGetValueNow = false;
-                                                                                                      currentInnerFieldValue = "";
-                                                                                                } else {
-                                                                                                      currentInnerField = "";
-                                                                                                      currentInnerFieldGetValueNow = false;
-                                                                                                      currentInnerFieldValue = "";
-                                                                                                }
-                                                                                          } else if (c == ":") {
-                                                                                                
-                                                                                          }else {
-                                                                                                currentInnerFieldValue += c;
-                                                                                          }
-                                                                                    } else {
-                                                                                          if (c == ")") {
-                                                                                                if (currentInnerField != "" && currentInnerFieldValue != "") {
-                                                                                                      if (currentInnerField == "ItemID") {
-                                                                                                            currentIngredient.id = currentInnerFieldValue;
-                                                                                                      } else if (currentInnerField == "Required") {
-                                                                                                            currentIngredient.amount = currentInnerFieldValue;
-                                                                                                      }
-                                                                                                }
-                                                                                                currentFieldValue.push(currentFieldValue);
-
-                                                                                                currentIngredient = null;
-                                                                                                currentInnerField = "";
-                                                                                                currentInnerFieldGetValueNow = false;
-                                                                                                currentInnerFieldValue = "";
-                                                                                                openBrackets--;
-                                                                                          } else if (c == " " || c == "\n") {
-                                                                                                if (currentInnerField != "" && currentInnerFieldValue != "") {
-                                                                                                      if (currentInnerField == "ItemID") {
-                                                                                                            currentIngredient.id = currentInnerFieldValue;
-                                                                                                      } else if (currentInnerField == "Required") {
-                                                                                                            currentIngredient.amount = currentInnerFieldValue;
-                                                                                                      }
-                                                                                                }
-                                                                                                currentInnerField = "";
-                                                                                                currentInnerFieldGetValueNow = false;
-                                                                                                currentInnerFieldValue = "";
-                                                                                          } else if (c == ";") {
-                                                                                                if (currentInnerField == "ItemID" || currentInnerField == "Required") {
-                                                                                                      if (currentInnerField == "ItemID") {
-                                                                                                            currentIngredient.id = currentInnerFieldValue;
-                                                                                                      } else if (currentInnerField == "Required") {
-                                                                                                            currentIngredient.amount = currentInnerFieldValue;
-                                                                                                      }
-                                                                                                      currentInnerField = "";
-                                                                                                      currentInnerFieldGetValueNow = false;
-                                                                                                      currentInnerFieldValue = "";
-                                                                                                } else {
-                                                                                                      currentInnerField = "";
-                                                                                                      currentInnerFieldGetValueNow = false;
-                                                                                                      currentInnerFieldValue = "";
-                                                                                                }
-                                                                                          } else if (c == ":") {
-                                                                                                
-                                                                                          }else {
-                                                                                                currentInnerFieldValue += c;
+                                                                        if (c == "\n" || c == "," || c == ";") {
+                                                                              if (c == ";") {
+                                                                                    if (currentFieldCheck == "ItemID") {
+                                                                                          currentObject.id = currentFieldValue;
+                                                                                    } else if (currentFieldCheck == "AmountCrafted") {
+                                                                                          currentObject.amount = currentFieldValue;
+                                                                                    } else if (currentFieldCheck == "Path") {
+                                                                                          currentObject.path = currentFieldValue;
+                                                                                    } else if (currentFieldCheck == "ForceUnlockAtStart") {
+                                                                                          if (currentFieldValue == "true") {
+                                                                                                currentObject.forceunlockdefault = false;
+                                                                                                currentObject.forceunlock = true;
+                                                                                          } else if (currentFieldValue == "false") {
+                                                                                                currentObject.forceunlockdefault = false;
+                                                                                                currentObject.forceunlock = false;
                                                                                           }
                                                                                     }
                                                                               }
-                                                                        }
-                                                                  } else if (openBrackets == 1) {
-                                                                        if (c == " " || c == "\n") {
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
                                                                               
-                                                                        } else if (c == "(") {
-                                                                              openBrackets ++;
-                                                                              currentIngredient = new Ingredient("",0);
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
-                                                                        } else if (c == ";") {
-                                                                              currentObject.ingredients = currentFieldValue;
-                                                                              currentIngredient = null;
-                                                                              currentFieldCheck = "";
-                                                                              currentFieldGetValueNow = false;
-                                                                              currentFieldValue = "";
-                                                                              currentInnerField = "";
-                                                                              currentInnerFieldGetValueNow = false;
-                                                                              currentInnerFieldValue = "";
-                                                                        } else if (c == ",") {
-
                                                                         } else {
-                                                                              currentFieldCheck = "";
-                                                                              currentFieldGetValueNow = false;
-                                                                              currentFieldValue = "";
-                                                                              currentInnerField = "";
-                                                                              currentInnerFieldGetValueNow = false;
-                                                                              currentInnerFieldValue = "";
+                                                                              currentFieldValue += c;
                                                                         }
-                                                                  } else {
-                                                                        currentFieldCheck = "";
-                                                                        currentFieldGetValueNow = false;
-                                                                        currentFieldValue = "";
-                                                                        
-                                                                        currentInnerField = "";
-                                                                        currentInnerFieldGetValueNow = false;
-                                                                        currentInnerFieldValue = "";
-                                                                  }
-                                                            } else if (currentFieldCheck == "LinkedItemIDs" || currentFieldCheck == "Unlocks") {
-                                                                  if (c == " " || c == "\n") {
-                                                                        currentFieldCheck = "";
-                                                                        currentFieldGetValueNow = false;
-                                                                        currentFieldValue = "";
-                                                                        
-                                                                        currentInnerField = "";
-                                                                        currentInnerFieldGetValueNow = false;
-                                                                        currentInnerFieldValue = "";
-                                                                  } else if (c == ";") {
-                                                                        if (currentInnerField != "") {
-                                                                              currentFieldValue.push(currentInnerField);
-                                                                        }
-                                                                        if (currentFieldCheck == "LinkedItemIDs") {
-                                                                              currentObject.linkeditems = currentFieldValue;
-                                                                        } else if (currentFieldCheck == "Unlocks") {
-                                                                              currentObject.unlocks = currentFieldValue;
-                                                                        }
-                                                                        currentFieldCheck = "";
-                                                                        currentFieldGetValueNow = false;
-                                                                        currentFieldValue = "";
-                                                                        
-                                                                        currentInnerField = "";
-                                                                        currentInnerFieldGetValueNow = false;
-                                                                        currentInnerFieldValue = "";
-                                                                  } else if (c == "\"") {
-                                                                        currentFieldCheck = "";
-                                                                        currentFieldGetValueNow = false;
-                                                                        currentFieldValue = "";
-                                                                        
-                                                                        currentInnerField = "";
-                                                                        currentInnerFieldGetValueNow = false;
-                                                                        currentInnerFieldValue = "";
-                                                                  } else if (c == ",") {
-                                                                        if  (currentInnerField == "") {
-
-                                                                        } else {
-                                                                              currentFieldValue.push(currentInnerField);
-                                                                              currentInnerField = "";
-                                                                        }
-                                                                  } else {
-                                                                        currentInnerField += c;
-                                                                  }
-                                                            } else if (currentFieldCheck == "DisplayName" || currentFieldCheck == "Tooltip") {
-                                                                  if (c == ";") {
-                                                                        if (currentFieldCheck == "DisplayName") {
-                                                                              currentObject.displayname = currentFieldValue;
-                                                                        } else if (currentFieldCheck == "Tooltip") {
-                                                                              currentObject.tooltip = currentFieldValue;
-                                                                        }
-                                                                        currentFieldCheck = "";
-                                                                        currentFieldGetValueNow = false;
-                                                                        currentFieldValue = "";
-                                                                        
-                                                                        currentInnerField = "";
-                                                                        currentInnerFieldGetValueNow = false;
-                                                                        currentInnerFieldValue = "";
-                                                                  } else if (c == "\"") {
-                                                                        
-                                                                  } else {
-                                                                        currentFieldValue += c;
-                                                                  }
-                                                            } else {
-                                                                  if (c == " " || c == "\n" || c == "," || c == ";") {
-                                                                        if (c == ";") {
-                                                                              if (currentFieldCheck == "ItemID") {
-                                                                                    currentObject.id = currentFieldValue;
-                                                                              } else if (currentFieldCheck == "AmountCrafted") {
-                                                                                    currentObject.amount = currentFieldValue;
-                                                                              } else if (currentFieldCheck == "Path") {
-                                                                                    currentObject.path = currentFieldValue;
-                                                                              } else if (currentFieldCheck == "ForceUnlockAtStart") {
-                                                                                    if (currentFieldValue == "true") {
-                                                                                          currentObject.forceunlockdefault = false;
-                                                                                          currentObject.forceunlock = true;
-                                                                                    } else if (currentFieldValue == "false") {
-                                                                                          currentObject.forceunlockdefault = false;
-                                                                                          currentObject.forceunlock = false;
-                                                                                    }
-                                                                              }
-                                                                        }
-                                                                        currentFieldCheck = "";
-                                                                        currentFieldGetValueNow = false;
-                                                                        currentFieldValue = "";
-                                                                        
-                                                                        currentInnerField = "";
-                                                                        currentInnerFieldGetValueNow = false;
-                                                                        currentInnerFieldValue = "";
-                                                                  } else {
-                                                                        currentFieldValue += c;
                                                                   }
                                                             }
                                                       }
                                                 }
                                           }
-                                    }
-                              } else {
+                                    } else {
 
+                                    }
+                              } else if (input_mode === 4) {
+                                    if (openBrackets == 0) {
+                                          if (c == " " || c == "\n") {
+
+                                          } else if (c == "(") {
+                                                currentObject = new CraftingTab("","","","");
+                                                openBrackets ++;
+                                          } else {
+
+                                          }
+                                    } else if (openBrackets == 1) {
+                                          if (c == ")") {
+                                                openBrackets --;
+                                                customCraftingTabs.push(currentObject);
+                                                currentObject = null;
+                                                currentIngredient = null;
+                                                currentFieldCheck = "";
+                                                currentFieldGetValueNow = false;
+                                                currentFieldValue = "";
+                                                currentInnerField = "";
+                                                currentInnerFieldGetValueNow = false;
+                                                currentInnerFieldValue = "";
+                                          } else {
+                                                if (currentFieldCheck == "") {
+                                                      if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                            if (c == ":" || c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            }
+                                                      } else {
+                                                            currentFieldCheck += c;
+                                                      }
+                                                } else {
+                                                      if (!currentFieldGetValueNow) {
+                                                            if (c == " " || c == "\n") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ":") {
+                                                                  if (currentFieldCheck == "TabID" || currentFieldCheck == "DisplayName" || currentFieldCheck == "SpriteItemID" || currentFieldCheck == "ParentTabPath") {
+                                                                        currentFieldGetValueNow = true;
+                                                                  } else {
+                                                                        currentFieldCheck = "";
+                                                                        currentFieldGetValueNow = false;
+                                                                        currentFieldValue = "";
+                                                                        currentInnerField = "";
+                                                                        currentInnerFieldGetValueNow = false;
+                                                                        currentInnerFieldValue = "";
+                                                                  }
+                                                            } else {
+                                                                  currentFieldCheck += c;
+                                                            }
+                                                      } else {
+                                                            if (currentFieldValue === "") {
+                                                                  if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                                        if (c == ";") {
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        }
+                                                                  } else {
+                                                                        if (currentFieldCheck == "DisplayName") {
+                                                                              currentFieldValue = "";
+                                                                              if (c == "\"") {
+                                                                                                
+                                                                              } else {
+                                                                                    currentFieldValue += c;
+                                                                              }
+                                                                        } else {
+                                                                              currentFieldValue += c;
+                                                                        }
+                                                                  }
+                                                            } else {
+                                                                  if (currentFieldCheck == "DisplayName") {
+                                                                        if (c == ";") {
+                                                                              if (currentFieldCheck == "DisplayName") {
+                                                                                    currentObject.displayname = currentFieldValue;
+                                                                              }
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        } else if (c == "\"") {
+                                                                                          
+                                                                        } else {
+                                                                              currentFieldValue += c;
+                                                                        }
+                                                                  } else {
+                                                                        if (c == "\n" || c == "," || c == ";") {
+                                                                              if (c == ";") {
+                                                                                    if (currentFieldCheck == "TabID") {
+                                                                                          currentObject.id = currentFieldValue;
+                                                                                    } else if (currentFieldCheck == "SpriteItemID") {
+                                                                                          currentObject.spriteitemid = currentFieldValue;
+                                                                                    } else if (currentFieldCheck == "ParentTabPath") {
+                                                                                          currentObject.parenttabpath = currentFieldValue;
+                                                                                    }
+                                                                              }
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        } else {
+                                                                              currentFieldValue += c;
+                                                                        }
+                                                                  }
+                                                            }
+                                                      }
+                                                }
+                                          }
+                                    } else {
+
+                                    }
                               }
                         }
                   } else {
@@ -504,16 +651,19 @@ function parseString(input) {
       });
 
       if (input_mode == 1) {
-            var __o = new RecipeData(addedRecipes,1);
+            var __o = new OutputData(addedRecipes,1);
             return __o;
       } else if (input_mode == 2) {
-            var __o = new RecipeData(modifiedRecipes,2);
+            var __o = new OutputData(modifiedRecipes,2);
             return __o;
       } else if (input_mode == 3) {
-            var __o = new RecipeData(aliasRecipes,3);
+            var __o = new OutputData(aliasRecipes,3);
+            return __o;
+      } else if (input_mode == 4) {
+            var __o = new OutputData(customCraftingTabs,4);
             return __o;
       } else {
-            var __o = new RecipeData([],0);
+            var __o = new OutputData([],0);
             return __o;
       }
 }
@@ -594,10 +744,7 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
-      }
-
-
-      if (mode === 2) {
+      } else if (mode === 2) {
             var modifiedcount = data.length;
             data.forEach((v,i) => {
                   if (i === 0) {
@@ -655,10 +802,7 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
-      }
-
-      
-      if (mode === 3) {
+      } else if (mode === 3) {
             var aliascount = data.length;
             data.forEach((v,i) => {
                   if (i === 0) {
@@ -725,6 +869,29 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
+      } else if (mode === 4) {
+            var craftingtabscount = data.length;
+            data.forEach((v,i) => {
+                  if (i === 0) {
+                        output += "CustomCraftingTabs: (" + newline;
+                  } else {
+                        output += "," + newline + "(" + newline;
+                  }
+                  output += tab + "TabID: " + v.id + ";" + newline;
+                  if (v.displayname !== "") {
+                        output += tab + "DisplayName: " + "\"" + v.displayname + "\"" + ";" + newline;
+                  }
+                  if (v.spriteitemid !== "") {
+                        output += tab + "SpriteItemID: " + v.spriteitemid + ";" + newline;
+                  }
+                  if (v.parenttabpath !== "") {
+                        output += tab + "ParentTabPath: " + v.parenttabpath + ";" + newline;
+                  }
+                  output += ")";
+                  if (i+1 >= craftingtabscount) {
+                        output += ";" + newline;
+                  }
+            });
       }
 
 
@@ -737,7 +904,7 @@ const tab = "    ";
 
 // CLASSES
 
-class RecipeData {
+class OutputData {
       constructor(data,mode) {
             this.data = data;
             this.mode = mode;
@@ -763,5 +930,14 @@ class Ingredient {
       constructor(id,amount) {
             this.id = id;
             this.amount = amount;
+      }
+}
+
+class CraftingTab {
+      constructor(id,displayname,spriteitemid,parenttabpath) {
+            this.id = id;
+            this.displayname = displayname;
+            this.spriteitemid = spriteitemid;
+            this.parenttabpath = parenttabpath;
       }
 }

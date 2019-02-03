@@ -15,15 +15,15 @@ function outputData() {
       var outp = document.getElementById("code-output");
       var strings = "";
       if (outputMode === 0) {
-            var __o = new RecipeData(_addedRecipes,1);
+            var __o = new OutputData(_addedRecipes,1);
             strings = toCString(__o);
       }
       if (outputMode === 1) {
-            var __o = new RecipeData(_modifiedRecipes,2);
+            var __o = new OutputData(_modifiedRecipes,2);
             strings = toCString(__o);
       }
       if (outputMode === 2) {
-            var __o = new RecipeData(_aliasRecipes,3);
+            var __o = new OutputData(_aliasRecipes,3);
             strings = toCString(__o);
       }
       outp.innerHTML = strings;
