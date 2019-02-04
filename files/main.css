@@ -28,16 +28,3 @@ html {
       align-content: center;
       margin: 0 0 0 0;
 }
-
-#ingredient-list {
-      height: 250px;
-      width: 200px;
-      display: inline-block;
-      scroll-behavior: smooth;
-      overflow-x: scroll;
-      overflow-y: scroll;
-      border-color: white;
-      border-width: 1px;
-      border-style: solid;
-      vertical-align: top;
-}

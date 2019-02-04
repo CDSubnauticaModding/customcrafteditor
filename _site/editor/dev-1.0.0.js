@@ -1,18 +1,25 @@
 window.onload = function() {
       document.getElementById("copy-output").onclick = copy_output;
-      document.getElementById("add-confirm").onclick = new_recipe;
-      document.getElementById("add-ingredient-confirm").onclick = new_ingredient;
-      document.getElementById("add-linked-confirm").onclick = new_linked;
-      document.getElementById("add-unlock-confirm").onclick = new_unlock;
-      document.getElementById("editor-input-toggle").onclick = toggle_input;
+      document.getElementById("editor-reset").onclick = resetValues;
       document.getElementById("load-input").onclick = loadInput;
+      document.getElementById("editor-input-toggle").onclick = toggle_input;
+      document.getElementById("editor-change-toggle").onclick = toggle_showChange;
       document.getElementById("change-to-nothing").onclick = function() {change_mode(0)};
       document.getElementById("change-to-added").onclick = function() {change_mode(1)};
       document.getElementById("change-to-modified").onclick = function() {change_mode(2)};
       document.getElementById("change-to-alias").onclick = function() {change_mode(3)};
       document.getElementById("change-to-customtab").onclick = function() {change_mode(4)};
+
+      document.getElementById("editor-recipe-add-confirm").onclick = new_recipe;
+      document.getElementById("editor-recipe-add-ingredient-confirm").onclick = new_ingredient;
+      document.getElementById("editor-recipe-add-linked-confirm").onclick = new_linked;
+      document.getElementById("editor-recipe-add-unlock-confirm").onclick = new_unlock;
+
+      document.getElementById("editor-customtab-add-confirm").onclick = new_craftingtab;
+
       change_mode(0);
       update_input_visibility();
+      update_change_visibility();
       outputData();
 }
 
@@ -36,6 +43,7 @@ function outputData() {
             strings = toCString(__o);
       }
       outp.innerHTML = strings;
+      c_update_recipeList();
 }
 
 function copy_output() {
@@ -52,13 +60,13 @@ function clearSelection()
 }
 
 function new_recipe() {
-      var t_id = document.getElementById("add-id").value;
-      var t_amount = document.getElementById("add-amount").value;
-      var t_forceunlock = document.getElementById("add-forceunlock").checked;
-      var t_forceunlockdefault = document.getElementById("add-forceunlock-default").checked;
-      var t_path = document.getElementById("add-path").value;
-      var t_displayname = document.getElementById("add-display").value;
-      var t_tooltip = document.getElementById("add-tooltip").value;
+      var t_id = document.getElementById("editor-recipe-add-id").value;
+      var t_amount = document.getElementById("editor-recipe-add-amount").value;
+      var t_forceunlock = document.getElementById("editor-recipe-add-forceunlock").checked;
+      var t_forceunlockdefault = document.getElementById("editor-recipe-add-forceunlock-default").checked;
+      var t_path = document.getElementById("editor-recipe-add-path").value;
+      var t_displayname = document.getElementById("editor-recipe-add-display").value;
+      var t_tooltip = document.getElementById("editor-recipe-add-tooltip").value;
       var _recipe = new Recipe(t_id,t_amount,temp_Ingredients,temp_Linked,t_forceunlock,t_forceunlockdefault,temp_Unlock,t_path,t_displayname,t_tooltip);
       if (outputMode === 1) {
             _addedRecipes.push(_recipe);
@@ -72,29 +80,495 @@ function new_recipe() {
       temp_Ingredients = [];
       temp_Linked = [];
       temp_Unlock = [];
-      document.getElementById("add-id").value = "";
-      document.getElementById("add-amount").value = 0;
-      document.getElementById("add-forceunlock").checked = true;
-      document.getElementById("add-forceunlock-default").checked = true;
-      document.getElementById("add-path").value = "";
-      document.getElementById("add-display").value = "";
-      document.getElementById("add-tooltip").value = "";
+      document.getElementById("editor-recipe-add-id").value = "";
+      document.getElementById("editor-recipe-add-amount").value = 0;
+      document.getElementById("editor-recipe-add-forceunlock").checked = true;
+      document.getElementById("editor-recipe-add-forceunlock-default").checked = true;
+      document.getElementById("editor-recipe-add-path").value = "";
+      document.getElementById("editor-recipe-add-display").value = "";
+      document.getElementById("editor-recipe-add-tooltip").value = "";
       update_ingredientList();
+      update_linkedList();
+      update_unlockList();
+      outputData();
+}
+
+function c_update_recipeList() {
+      document.getElementById("editor-recipe-citems-list").innerHTML = "";
+      var template = document.getElementById("recipe-clist-template");
+      var templateIng = document.getElementById("recipe-clist-ingredient-template");
+      var templateLnk = document.getElementById("recipe-clist-linked-template");
+      var templateUnl = document.getElementById("recipe-clist-unlock-template");
+      if (outputMode === 1) {
+            _addedRecipes.forEach((v,i) => {
+                  var clone = document.importNode(template.content, true);
+                  clone.querySelectorAll(".recipe-clist-id")[0].value = v.id;
+                  clone.querySelectorAll(".recipe-clist-id")[0].onchange = function() {c_edit_recipe(i,"id",this.value);};
+                  clone.querySelectorAll(".recipe-clist-amount")[0].value = v.amount;
+                  clone.querySelectorAll(".recipe-clist-amount")[0].onchange = function() {c_edit_recipe(i,"amount",this.value);};
+                  clone.querySelectorAll(".recipe-clist-displayname")[0].value = v.displayname;
+                  clone.querySelectorAll(".recipe-clist-displayname")[0].onchange = function() {c_edit_recipe(i,"displayname",this.value);};
+                  clone.querySelectorAll(".recipe-clist-tooltip")[0].value = v.tooltip;
+                  clone.querySelectorAll(".recipe-clist-tooltip")[0].onchange = function() {c_edit_recipe(i,"tooltip",this.value);};
+                  clone.querySelectorAll(".recipe-clist-path")[0].value = v.path;
+                  clone.querySelectorAll(".recipe-clist-path")[0].onchange = function() {c_edit_recipe(i,"path",this.value);};
+                  clone.querySelectorAll(".recipe-clist-path")[0].value = v.path;
+                  clone.querySelectorAll(".recipe-clist-path")[0].onchange = function() {c_edit_recipe(i,"path",this.value);};
+                  clone.querySelectorAll(".recipe-clist-forceunlock-default")[0].checked = v.forceunlockdefault ? "checked" : "";
+                  clone.querySelectorAll(".recipe-clist-forceunlock-default")[0].onchange = function() {c_edit_recipe(i,"forceunlockdef",this.checked);};
+                  clone.querySelectorAll(".recipe-clist-forceunlock")[0].checked = v.forceunlock ? "checked" : "";
+                  clone.querySelectorAll(".recipe-clist-forceunlock")[0].onchange = function() {c_edit_recipe(i,"forceunlock",this.checked);};
+                  clone.querySelectorAll(".recipe-clist-remove")[0].onclick = function() {c_remove_recipe(i);};
+                  clone.querySelectorAll(".recipe-clist-ingredients")[0].innerHTML = "";
+                  v.ingredients.forEach((vv,ii) => {
+                        var cloneIng = document.importNode(templateIng.content, true);
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-id")[0].value = vv.id;
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-id")[0].onchange = function() {c_edit_recipe_ingredient(i,ii,"id",this.value);};
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-amount")[0].value = vv.amount;
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-amount")[0].onchange = function() {c_edit_recipe_ingredient(i,ii,"amount",this.value);};
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-remove")[0].onclick = function() {c_remove_recipe_ingredient(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-ingredients")[0].appendChild(cloneIng);
+                  });
+                  clone.querySelectorAll(".recipe-clist-ingredients-add")[0].onclick = function() {c_new_recipe_ingredient(i);};
+                  clone.querySelectorAll(".recipe-clist-linked")[0].innerHTML = "";
+                  v.linkeditems.forEach((vv,ii) => {
+                        var cloneLnk = document.importNode(templateLnk.content, true);
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-id")[0].value = vv;
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-id")[0].onchange = function() {c_edit_recipe_linked(i,ii,this.value);};
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-remove")[0].onclick = function() {c_remove_recipe_linked(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-linked")[0].appendChild(cloneLnk);
+                  });
+                  clone.querySelectorAll(".recipe-clist-linked-add")[0].onclick = function() {c_new_recipe_linked(i);};
+                  clone.querySelectorAll(".recipe-clist-unlock")[0].innerHTML = "";
+                  v.unlocks.forEach((vv,ii) => {
+                        var cloneUnl = document.importNode(templateUnl.content, true);
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-id")[0].value = vv;
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-id")[0].onchange = function() {c_edit_recipe_unlock(i,ii,this.value);};
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-remove")[0].onclick = function() {c_remove_recipe_unlock(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-unlock")[0].appendChild(cloneUnl);
+                  });
+                  clone.querySelectorAll(".recipe-clist-unlock-add")[0].onclick = function() {c_new_recipe_unlock(i);};
+                  document.getElementById("editor-recipe-citems-list").appendChild(clone);
+            });
+      } else if (outputMode === 2) {
+            _modifiedRecipes.forEach((v,i) => {
+                  var clone = document.importNode(template.content, true);
+                  clone.querySelectorAll(".recipe-clist-id")[0].value = v.id;
+                  clone.querySelectorAll(".recipe-clist-id")[0].onchange = function() {c_edit_recipe(i,"id",this.value);};
+                  clone.querySelectorAll(".recipe-clist-amount")[0].value = v.amount;
+                  clone.querySelectorAll(".recipe-clist-amount")[0].onchange = function() {c_edit_recipe(i,"amount",this.value);};
+                  clone.querySelectorAll(".recipe-clist-displayname")[0].value = v.displayname;
+                  clone.querySelectorAll(".recipe-clist-displayname")[0].onchange = function() {c_edit_recipe(i,"displayname",this.value);};
+                  clone.querySelectorAll(".recipe-clist-tooltip")[0].value = v.tooltip;
+                  clone.querySelectorAll(".recipe-clist-tooltip")[0].onchange = function() {c_edit_recipe(i,"tooltip",this.value);};
+                  clone.querySelectorAll(".recipe-clist-path")[0].value = v.path;
+                  clone.querySelectorAll(".recipe-clist-path")[0].onchange = function() {c_edit_recipe(i,"path",this.value);};
+                  clone.querySelectorAll(".recipe-clist-path")[0].value = v.path;
+                  clone.querySelectorAll(".recipe-clist-path")[0].onchange = function() {c_edit_recipe(i,"path",this.value);};
+                  clone.querySelectorAll(".recipe-clist-forceunlock-default")[0].checked = v.forceunlockdefault ? "checked" : "";
+                  clone.querySelectorAll(".recipe-clist-forceunlock-default")[0].onchange = function() {c_edit_recipe(i,"forceunlockdef",this.checked);};
+                  clone.querySelectorAll(".recipe-clist-forceunlock")[0].checked = v.forceunlock ? "checked" : "";
+                  clone.querySelectorAll(".recipe-clist-forceunlock")[0].onchange = function() {c_edit_recipe(i,"forceunlock",this.checked);};
+                  clone.querySelectorAll(".recipe-clist-remove")[0].onclick = function() {c_remove_recipe(i);};
+                  clone.querySelectorAll(".recipe-clist-ingredients")[0].innerHTML = "";
+                  v.ingredients.forEach((vv,ii) => {
+                        var cloneIng = document.importNode(templateIng.content, true);
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-id")[0].value = vv.id;
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-id")[0].onchange = function() {c_edit_recipe_ingredient(i,ii,"id",this.value);};
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-amount")[0].value = vv.amount;
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-amount")[0].onchange = function() {c_edit_recipe_ingredient(i,ii,"amount",this.value);};
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-remove")[0].onclick = function() {c_remove_recipe_ingredient(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-ingredients")[0].appendChild(cloneIng);
+                  });
+                  clone.querySelectorAll(".recipe-clist-ingredients-add")[0].onclick = function() {c_new_recipe_ingredient(i);};
+                  clone.querySelectorAll(".recipe-clist-linked")[0].innerHTML = "";
+                  v.linkeditems.forEach((vv,ii) => {
+                        var cloneLnk = document.importNode(templateLnk.content, true);
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-id")[0].value = vv;
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-id")[0].onchange = function() {c_edit_recipe_linked(i,ii,this.value);};
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-remove")[0].onclick = function() {c_remove_recipe_linked(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-linked")[0].appendChild(cloneLnk);
+                  });
+                  clone.querySelectorAll(".recipe-clist-linked-add")[0].onclick = function() {c_new_recipe_linked(i);};
+                  clone.querySelectorAll(".recipe-clist-unlock")[0].innerHTML = "";
+                  v.unlocks.forEach((vv,ii) => {
+                        var cloneUnl = document.importNode(templateUnl.content, true);
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-id")[0].value = vv;
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-id")[0].onchange = function() {c_edit_recipe_unlock(i,ii,this.value);};
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-remove")[0].onclick = function() {c_remove_recipe_unlock(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-unlock")[0].appendChild(cloneUnl);
+                  });
+                  clone.querySelectorAll(".recipe-clist-unlock-add")[0].onclick = function() {c_new_recipe_unlock(i);};
+                  document.getElementById("editor-recipe-citems-list").appendChild(clone);
+            });
+      } else if (outputMode === 3) {
+            _aliasRecipes.forEach((v,i) => {
+                  var clone = document.importNode(template.content, true);
+                  clone.querySelectorAll(".recipe-clist-id")[0].value = v.id;
+                  clone.querySelectorAll(".recipe-clist-id")[0].onchange = function() {c_edit_recipe(i,"id",this.value);};
+                  clone.querySelectorAll(".recipe-clist-amount")[0].value = v.amount;
+                  clone.querySelectorAll(".recipe-clist-amount")[0].onchange = function() {c_edit_recipe(i,"amount",this.value);};
+                  clone.querySelectorAll(".recipe-clist-displayname")[0].value = v.displayname;
+                  clone.querySelectorAll(".recipe-clist-displayname")[0].onchange = function() {c_edit_recipe(i,"displayname",this.value);};
+                  clone.querySelectorAll(".recipe-clist-tooltip")[0].value = v.tooltip;
+                  clone.querySelectorAll(".recipe-clist-tooltip")[0].onchange = function() {c_edit_recipe(i,"tooltip",this.value);};
+                  clone.querySelectorAll(".recipe-clist-path")[0].value = v.path;
+                  clone.querySelectorAll(".recipe-clist-path")[0].onchange = function() {c_edit_recipe(i,"path",this.value);};
+                  clone.querySelectorAll(".recipe-clist-path")[0].value = v.path;
+                  clone.querySelectorAll(".recipe-clist-path")[0].onchange = function() {c_edit_recipe(i,"path",this.value);};
+                  clone.querySelectorAll(".recipe-clist-forceunlock-default")[0].checked = v.forceunlockdefault ? "checked" : "";
+                  clone.querySelectorAll(".recipe-clist-forceunlock-default")[0].onchange = function() {c_edit_recipe(i,"forceunlockdef",this.checked);};
+                  clone.querySelectorAll(".recipe-clist-forceunlock")[0].checked = v.forceunlock ? "checked" : "";
+                  clone.querySelectorAll(".recipe-clist-forceunlock")[0].onchange = function() {c_edit_recipe(i,"forceunlock",this.checked);};
+                  clone.querySelectorAll(".recipe-clist-remove")[0].onclick = function() {c_remove_recipe(i);};
+                  clone.querySelectorAll(".recipe-clist-ingredients")[0].innerHTML = "";
+                  v.ingredients.forEach((vv,ii) => {
+                        var cloneIng = document.importNode(templateIng.content, true);
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-id")[0].value = vv.id;
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-id")[0].onchange = function() {c_edit_recipe_ingredient(i,ii,"id",this.value);};
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-amount")[0].value = vv.amount;
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-amount")[0].onchange = function() {c_edit_recipe_ingredient(i,ii,"amount",this.value);};
+                        cloneIng.querySelectorAll(".recipe-clist-ingredient-remove")[0].onclick = function() {c_remove_recipe_ingredient(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-ingredients")[0].appendChild(cloneIng);
+                  });
+                  clone.querySelectorAll(".recipe-clist-ingredients-add")[0].onclick = function() {c_new_recipe_ingredient(i);};
+                  clone.querySelectorAll(".recipe-clist-linked")[0].innerHTML = "";
+                  v.linkeditems.forEach((vv,ii) => {
+                        var cloneLnk = document.importNode(templateLnk.content, true);
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-id")[0].value = vv;
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-id")[0].onchange = function() {c_edit_recipe_linked(i,ii,this.value);};
+                        cloneLnk.querySelectorAll(".recipe-clist-linked-remove")[0].onclick = function() {c_remove_recipe_linked(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-linked")[0].appendChild(cloneLnk);
+                  });
+                  clone.querySelectorAll(".recipe-clist-linked-add")[0].onclick = function() {c_new_recipe_linked(i);};
+                  clone.querySelectorAll(".recipe-clist-unlock")[0].innerHTML = "";
+                  v.unlocks.forEach((vv,ii) => {
+                        var cloneUnl = document.importNode(templateUnl.content, true);
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-id")[0].value = vv;
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-id")[0].onchange = function() {c_edit_recipe_unlock(i,ii,this.value);};
+                        cloneUnl.querySelectorAll(".recipe-clist-unlock-remove")[0].onclick = function() {c_remove_recipe_unlock(i,ii);};
+                        clone.querySelectorAll(".recipe-clist-unlock")[0].appendChild(cloneUnl);
+                  });
+                  clone.querySelectorAll(".recipe-clist-unlock-add")[0].onclick = function() {c_new_recipe_unlock(i);};
+                  document.getElementById("editor-recipe-citems-list").appendChild(clone);
+            });
+      }
+}
+
+function c_new_recipe_ingredient(index) {
+      var _ingr = new Ingredient("",0);
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  _addedRecipes[index].ingredients.push(_ingr);
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  _modifiedRecipes[index].ingredients.push(_ingr);
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  _aliasRecipes[index].ingredients.push(_ingr);
+            }
+      }
+      outputData();
+}
+
+function c_new_recipe_linked(index) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  _addedRecipes[index].linkeditems.push("");
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  _modifiedRecipes[index].linkeditems.push("");
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  _aliasRecipes[index].linkeditems.push("");
+            }
+      }
+      outputData();
+}
+
+function c_new_recipe_unlock(index) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  _addedRecipes[index].unlocks.push("");
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  _modifiedRecipes[index].unlocks.push("");
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  _aliasRecipes[index].unlocks.push("");
+            }
+      }
+      outputData();
+}
+
+function c_edit_recipe(index,field,newvalue) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (field === "id") {
+                        _addedRecipes[index].id = newvalue;
+                  } else if (field === "amount") {
+                        _addedRecipes[index].amount = newvalue;
+                  } else if (field === "displayname") {
+                        _addedRecipes[index].displayname = newvalue;
+                  } else if (field === "tooltip") {
+                        _addedRecipes[index].tooltip = newvalue;
+                  } else if (field === "path") {
+                        _addedRecipes[index].path = newvalue;
+                  } else if (field === "forceunlockdef") {
+                        if (newvalue === true || newvalue === false) {
+                              _addedRecipes[index].forceunlockdefault = newvalue;
+                        } else {
+                              _addedRecipes[index].forceunlockdefault = newvalue === "checked" ? true : false;
+                        }
+                  } else if (field === "forceunlock") {
+                        if (newvalue === true || newvalue === false) {
+                              _addedRecipes[index].forceunlock = newvalue;
+                        } else {
+                              _addedRecipes[index].forceunlock = newvalue === "checked" ? true : false;
+                        }
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (field === "id") {
+                        _modifiedRecipes[index].id = newvalue;
+                  } else if (field === "amount") {
+                        _modifiedRecipes[index].amount = newvalue;
+                  } else if (field === "displayname") {
+                        _modifiedRecipes[index].displayname = newvalue;
+                  } else if (field === "tooltip") {
+                        _modifiedRecipes[index].tooltip = newvalue;
+                  } else if (field === "path") {
+                        _modifiedRecipes[index].path = newvalue;
+                  } else if (field === "forceunlockdef") {
+                        if (newvalue === true || newvalue === false) {
+                              _modifiedRecipes[index].forceunlockdefault = newvalue;
+                        } else {
+                              _modifiedRecipes[index].forceunlockdefault = newvalue === "checked" ? true : false;
+                        }
+                  } else if (field === "forceunlock") {
+                        if (newvalue === true || newvalue === false) {
+                              _modifiedRecipes[index].forceunlock = newvalue;
+                        } else {
+                              _modifiedRecipes[index].forceunlock = newvalue === "checked" ? true : false;
+                        }
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (field === "id") {
+                        _aliasRecipes[index].id = newvalue;
+                  } else if (field === "amount") {
+                        _aliasRecipes[index].amount = newvalue;
+                  } else if (field === "displayname") {
+                        _aliasRecipes[index].displayname = newvalue;
+                  } else if (field === "tooltip") {
+                        _aliasRecipes[index].tooltip = newvalue;
+                  } else if (field === "path") {
+                        _aliasRecipes[index].path = newvalue;
+                  } else if (field === "forceunlockdef") {
+                        if (newvalue === true || newvalue === false) {
+                              _aliasRecipes[index].forceunlockdefault = newvalue;
+                        } else {
+                              _aliasRecipes[index].forceunlockdefault = newvalue === "checked" ? true : false;
+                        }
+                  } else if (field === "forceunlock") {
+                        if (newvalue === true || newvalue === false) {
+                              _aliasRecipes[index].forceunlock = newvalue;
+                        } else {
+                              _aliasRecipes[index].forceunlock = newvalue === "checked" ? true : false;
+                        }
+                  }
+            }
+      }
+      outputData();
+}
+
+function c_edit_recipe_ingredient(index,iindex,field,newvalue) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (iindex >= 0 && _addedRecipes[index].ingredients.length > iindex) {
+                        if (field === "id") {
+                              _addedRecipes[index].ingredients[iindex].id = newvalue;
+                        } else if (field === "amount") {
+                              _addedRecipes[index].ingredients[iindex].amount = newvalue;
+                        }
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (iindex >= 0 && _modifiedRecipes[index].ingredients.length > iindex) {
+                        if (field === "id") {
+                              _modifiedRecipes[index].ingredients[iindex].id = newvalue;
+                        } else if (field === "amount") {
+                              _modifiedRecipes[index].ingredients[iindex].amount = newvalue;
+                        }
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (iindex >= 0 && _aliasRecipes[index].ingredients.length > iindex) {
+                        if (field === "id") {
+                              _aliasRecipes[index].ingredients[iindex].id = newvalue;
+                        } else if (field === "amount") {
+                              _aliasRecipes[index].ingredients[iindex].amount = newvalue;
+                        }
+                  }
+            }
+      }
+      outputData();
+}
+
+function c_edit_recipe_linked(index,iindex,newvalue) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (iindex >= 0 && _addedRecipes[index].linkeditems.length > iindex) {
+                        _addedRecipes[index].linkeditems[iindex] = newvalue;
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (iindex >= 0 && _modifiedRecipes[index].linkeditems.length > iindex) {
+                        _modifiedRecipes[index].linkeditems[iindex] = newvalue;
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (iindex >= 0 && _aliasRecipes[index].linkeditems.length > iindex) {
+                        _aliasRecipes[index].linkeditems[iindex] = newvalue;
+                  }
+            }
+      }
+      outputData();
+}
+
+function c_edit_recipe_unlock(index,iindex,newvalue) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (iindex >= 0 && _addedRecipes[index].unlocks.length > iindex) {
+                        _addedRecipes[index].unlocks[iindex] = newvalue;
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (iindex >= 0 && _modifiedRecipes[index].unlocks.length > iindex) {
+                        _modifiedRecipes[index].unlocks[iindex] = newvalue;
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (iindex >= 0 && _aliasRecipes[index].unlocks.length > iindex) {
+                        _aliasRecipes[index].unlocks[iindex] = newvalue;
+                  }
+            }
+      }
+      outputData();
+}
+
+function c_remove_recipe(index) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  _addedRecipes.splice(index,1);
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  _modifiedRecipes.splice(index,1);
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  _aliasRecipes.splice(index,1);
+            }
+      }
+      outputData();
+}
+
+function c_remove_recipe_ingredient(index,iindex) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (iindex >= 0 && _addedRecipes[index].ingredients.length > iindex) {
+                        _addedRecipes[index].ingredients.splice(iindex,1);
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (iindex >= 0 && _modifiedRecipes[index].ingredients.length > iindex) {
+                        _modifiedRecipes[index].ingredients.splice(iindex,1);
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (iindex >= 0 && _aliasRecipes[index].ingredients.length > iindex) {
+                        _aliasRecipes[index].ingredients.splice(iindex,1);
+                  }
+            }
+      }
+      outputData();
+}
+
+function c_remove_recipe_linked(index,iindex) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (iindex >= 0 && _addedRecipes[index].linkeditems.length > iindex) {
+                        _addedRecipes[index].linkeditems.splice(iindex,1);
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (iindex >= 0 && _modifiedRecipes[index].linkeditems.length > iindex) {
+                        _modifiedRecipes[index].linkeditems.splice(iindex,1);
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (iindex >= 0 && _aliasRecipes[index].linkeditems.length > iindex) {
+                        _aliasRecipes[index].linkeditems.splice(iindex,1);
+                  }
+            }
+      }
+      outputData();
+}
+
+function c_remove_recipe_unlock(index,iindex) {
+      if (outputMode === 1) {
+            if (index >= 0 && _addedRecipes.length > index) {
+                  if (iindex >= 0 && _addedRecipes[index].unlocks.length > iindex) {
+                        _addedRecipes[index].unlocks.splice(iindex,1);
+                  }
+            }
+      } else if (outputMode === 2) {
+            if (index >= 0 && _modifiedRecipes.length > index) {
+                  if (iindex >= 0 && _modifiedRecipes[index].unlocks.length > iindex) {
+                        _modifiedRecipes[index].unlocks.splice(iindex,1);
+                  }
+            }
+      } else if (outputMode === 3) {
+            if (index >= 0 && _aliasRecipes.length > index) {
+                  if (iindex >= 0 && _aliasRecipes[index].unlocks.length > iindex) {
+                        _aliasRecipes[index].unlocks.splice(iindex,1);
+                  }
+            }
+      }
       outputData();
 }
 
 function new_ingredient() {
-      var t_id = document.getElementById("add-ingredient-id").value;
-      var t_amount = document.getElementById("add-ingredient-amount").value;
+      var t_id = document.getElementById("editor-recipe-add-ingredient-id").value;
+      var t_amount = document.getElementById("editor-recipe-add-ingredient-amount").value;
       var _ingredient = new Ingredient(t_id,t_amount);
       temp_Ingredients.push(_ingredient);
-      document.getElementById("add-ingredient-id").value = "";
-      document.getElementById("add-ingredient-amount").value = 1;
+      document.getElementById("editor-recipe-add-ingredient-id").value = "";
+      document.getElementById("editor-recipe-add-ingredient-amount").value = 1;
       update_ingredientList();
 }
 
 function update_ingredientList() {
-      document.getElementById("ingredient-list").innerHTML = "";
+      document.getElementById("editor-recipe-ingredient-list").innerHTML = "";
       var template = document.getElementById("ingredient-list-template");
       temp_Ingredients.forEach((v,i) => {
             var clone = document.importNode(template.content, true);
@@ -103,7 +577,7 @@ function update_ingredientList() {
             clone.querySelectorAll(".ingredient-list-amount")[0].value = v.amount;
             clone.querySelectorAll(".ingredient-list-amount")[0].onchange = function() {edit_ingredient(i,"amount",this.value);};
             clone.querySelectorAll(".ingredient-list-remove")[0].onclick = function() {remove_ingredient(i);};
-            document.getElementById("ingredient-list").appendChild(clone);
+            document.getElementById("editor-recipe-ingredient-list").appendChild(clone);
       });
 }
 
@@ -124,15 +598,83 @@ function remove_ingredient(index) {
 }
 
 function new_linked() {
-      var t_id = document.getElementById("add-linked-id").value;
+      var t_id = document.getElementById("editor-recipe-add-linked-id").value;
       temp_Linked.push(t_id);
-      document.getElementById("add-linked-id").value = "";
+      document.getElementById("editor-recipe-add-linked-id").value = "";
+      update_linkedList();
+}
+
+function update_linkedList() {
+      document.getElementById("editor-recipe-linked-list").innerHTML = "";
+      var template = document.getElementById("linked-list-template");
+      temp_Linked.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".linked-list-id")[0].value = v;
+            clone.querySelectorAll(".linked-list-id")[0].onchange = function() {edit_linked(i,"",this.value);};
+            clone.querySelectorAll(".linked-list-remove")[0].onclick = function() {remove_linked(i);};
+            document.getElementById("editor-recipe-linked-list").appendChild(clone);
+      });
+}
+
+function edit_linked(index,field,newvalue) {
+      if (index >= 0 && temp_Linked.length > index) {
+            if (field === "") {
+                  temp_Linked[index] = newvalue;
+            }
+      }
+      update_linkedList();
+}
+
+function remove_linked(index) {
+      temp_Linked.splice(index,1);
+      update_linkedList();
 }
 
 function new_unlock() {
-      var t_id = document.getElementById("add-unlock-id").value;
+      var t_id = document.getElementById("editor-recipe-add-unlock-id").value;
       temp_Unlock.push(t_id);
-      document.getElementById("add-unlock-id").value = "";
+      document.getElementById("editor-recipe-add-unlock-id").value = "";
+      update_unlockList();
+}
+
+function update_unlockList() {
+      document.getElementById("editor-recipe-unlock-list").innerHTML = "";
+      var template = document.getElementById("unlock-list-template");
+      temp_Unlock.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".unlock-list-id")[0].value = v;
+            clone.querySelectorAll(".unlock-list-id")[0].onchange = function() {edit_unlock(i,"",this.value);};
+            clone.querySelectorAll(".unlock-list-remove")[0].onclick = function() {remove_unlock(i);};
+            document.getElementById("editor-recipe-unlock-list").appendChild(clone);
+      });
+}
+
+function edit_unlock(index,field,newvalue) {
+      if (index >= 0 && temp_Linked.length > index) {
+            if (field === "") {
+                  temp_Linked[index] = newvalue;
+            }
+      }
+      update_unlockList();
+}
+
+function remove_unlock(index) {
+      temp_Unlock.splice(index,1);
+      update_unlockList();
+}
+
+function new_craftingtab() {
+      var t_id = document.getElementById("editor-customtab-add-id").value;
+      var t_displayname = document.getElementById("editor-customtab-add-display").value;
+      var t_spriteitemid = document.getElementById("editor-customtab-add-spriteitemid").value;
+      var t_parentpath = document.getElementById("editor-customtab-add-parentpath").value;
+      var _tab = new CraftingTab(t_id,t_displayname,t_spriteitemid,t_parentpath);
+      _customCraftingTabs.push(_tab);
+      document.getElementById("editor-customtab-add-id").value = "";
+      document.getElementById("editor-customtab-add-display").value = "";
+      document.getElementById("editor-customtab-add-spriteitemid").value = "";
+      document.getElementById("editor-customtab-add-parentpath").value = "";
+      outputData();
 }
 
 function change_mode(m) {
@@ -169,10 +711,7 @@ function loadInput() {
       var stringIn = elIn.value;
       elIn.value = "";
       var parsed = parseString(stringIn);
-      _addedRecipes = [];
-      _modifiedRecipes = [];
-      _aliasRecipes = [];
-      _customCraftingTabs = [];
+      resetValues();
       if (parsed.mode === 1) {
             _addedRecipes = parsed.data;
             change_mode(1);
@@ -190,6 +729,23 @@ function loadInput() {
       outputData();
 }
 
+function resetValues() {
+      _addedRecipes = [];
+      _modifiedRecipes = [];
+      _aliasRecipes = [];
+      _customCraftingTabs = [];
+      temp_Ingredients = [];
+      temp_Linked = [];
+      temp_Unlock = [];
+      update_ingredientList();
+      update_linkedList();
+      update_unlockList();
+      change_mode(0);
+      update_input_visibility();
+      update_change_visibility();
+      outputData();
+}
+
 function toggle_input() {
       change_input_visibility(!showInput);
 }
@@ -199,12 +755,41 @@ function change_input_visibility(visible) {
       update_input_visibility();
 }
 
+function toggle_showChange() {
+      change_change_visibility(!showChange);
+}
+
+function change_change_visibility(visible) {
+      showChange = visible;
+      update_change_visibility();
+}
+
 function update_input_visibility() {
       var el = document.getElementById("editor-input");
       if (showInput) {
             el.hidden = "";
       } else {
             el.hidden = "hidden";
+      }
+}
+
+function update_change_visibility() {
+      var elchange = document.getElementsByClassName("editor-change");
+      var eladd = document.getElementsByClassName("editor-add");
+      if (showChange) {
+            for (var i = 0; i < elchange.length; ++i) {
+                  elchange[i].hidden = "";
+            }
+            for (var i = 0; i < eladd.length; ++i) {
+                  eladd[i].hidden = "hidden";
+            }
+      } else {
+            for (var i = 0; i < elchange.length; ++i) {
+                  elchange[i].hidden = "hidden";
+            }
+            for (var i = 0; i < eladd.length; ++i) {
+                  eladd[i].hidden = "";
+            }
       }
 }
 
@@ -221,3 +806,4 @@ var temp_Unlock = [];
 
 var outputMode = 0;
 var showInput = false;
+var showChange = false;
