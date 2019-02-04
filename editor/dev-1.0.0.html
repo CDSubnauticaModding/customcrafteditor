@@ -29,11 +29,31 @@
                         -moz-tab-size: 4;
                         -o-tab-size: 4;
                   }
+                  .ingredient-list-entry {
+                        border-bottom: 2px solid white;
+                  }
+                  .ingredient-list-id, .ingredient-list-amount, .ingredient-list-remove {
+                        font-family: Arial;
+                        border-color: white;
+                        background-color: black;
+                        border-style: solid;
+                        width: 100%;
+                        color: white;
+                        border-width: 0px;
+                        border-bottom-width: 1px;
+                  }
             </style>
       </head>
       <body>
             <script src="/customcrafteditor/scripts/dev-1.0.0.js"></script>
             <script src="/customcrafteditor/editor/dev-1.0.0.js"></script>
+            <template id="ingredient-list-template">
+                  <div class="ingredient-list-entry">
+                        <input type="text" id="ingredient-list-id-template" class="ingredient-list-id" placeholder="ID" list="item-ids-list"></input>
+                        <input type="number" min="0" max="99" id="ingredient-list-amount-template" class="ingredient-list-amount" placeholder="Amount"></input>
+                        <button id="ingredient-list-remove-template" class="ingredient-list-remove">Remove</button>
+                  </div>
+            </template>
             <div id="output-mode">Output</div>
             <textarea id="code-output" placeholder="Output" readonly="readonly"></textarea>
             <button id="copy-output">Copy output</button>
@@ -62,7 +82,9 @@
                   <br>
                   <input id="add-ingredient-id" type="text" placeholder="Ingredient ID" list="item-ids-list">
                   <input id="add-ingredient-amount" type="number" min="-1" max="99" placeholder="Ingredient Amount" value="1">
-                  <div id="ingredient-list"></div>
+                  <div id="ingredient-list">
+                        
+                  </div>
                   <button id="add-ingredient-confirm">Add Ingredient</button>
                   <input id="add-linked-id" type="text" placeholder="Linked ID" list="item-ids-list">
                   <button id="add-linked-confirm">Add Linked</button>

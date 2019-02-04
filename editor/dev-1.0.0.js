@@ -79,6 +79,7 @@ function new_recipe() {
       document.getElementById("add-path").value = "";
       document.getElementById("add-display").value = "";
       document.getElementById("add-tooltip").value = "";
+      update_ingredientList();
       outputData();
 }
 
@@ -89,6 +90,37 @@ function new_ingredient() {
       temp_Ingredients.push(_ingredient);
       document.getElementById("add-ingredient-id").value = "";
       document.getElementById("add-ingredient-amount").value = 1;
+      update_ingredientList();
+}
+
+function update_ingredientList() {
+      document.getElementById("ingredient-list").innerHTML = "";
+      var template = document.getElementById("ingredient-list-template");
+      temp_Ingredients.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".ingredient-list-id")[0].value = v.id;
+            clone.querySelectorAll(".ingredient-list-id")[0].onchange = function() {edit_ingredient(i,"id",this.value);};
+            clone.querySelectorAll(".ingredient-list-amount")[0].value = v.amount;
+            clone.querySelectorAll(".ingredient-list-amount")[0].onchange = function() {edit_ingredient(i,"amount",this.value);};
+            clone.querySelectorAll(".ingredient-list-remove")[0].onclick = function() {remove_ingredient(i);};
+            document.getElementById("ingredient-list").appendChild(clone);
+      });
+}
+
+function edit_ingredient(index,field,newvalue) {
+      if (index >= 0 && temp_Ingredients.length > index) {
+            if (field === "id") {
+                  temp_Ingredients[index].id = newvalue;
+            } else if (field === "amount") {
+                  temp_Ingredients[index].amount = newvalue;
+            }
+      }
+      update_ingredientList();
+}
+
+function remove_ingredient(index) {
+      temp_Ingredients.splice(index,1);
+      update_ingredientList();
 }
 
 function new_linked() {
