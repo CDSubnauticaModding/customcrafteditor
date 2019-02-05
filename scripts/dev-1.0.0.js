@@ -866,7 +866,8 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
-      } else if (mode === 2) {
+      }
+      if (mode === 2) {
             var modifiedcount = data.length;
             data.forEach((v,i) => {
                   if (i === 0) {
@@ -924,7 +925,8 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
-      } else if (mode === 3) {
+      }
+      if (mode === 3) {
             var aliascount = data.length;
             data.forEach((v,i) => {
                   if (i === 0) {
@@ -991,7 +993,8 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
-      } else if (mode === 4) {
+      }
+      if (mode === 4) {
             var craftingtabscount = data.length;
             data.forEach((v,i) => {
                   if (i === 0) {
@@ -1014,7 +1017,8 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
-      } else if (mode === 5) {
+      }
+      if (mode === 5) {
             var customsizescount = data.length;
             data.forEach((v,i) => {
                   if (i === 0) {
