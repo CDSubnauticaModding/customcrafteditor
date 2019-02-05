@@ -110,7 +110,7 @@
                   .ingredient-list-entry, .linked-list-entry, .unlock-list-entry {
                         border-bottom: 2px solid white;
                   }
-                  #editor-recipe-citems-list, #editor-customtab-citems-list {
+                  #editor-recipe-citems-list, #editor-customtab-citems-list, #editor-customsize-citems-list, #editor-custombiofuels-citems-list {
                         min-height: 400px;
                         height: fill;
                         width: 100%;
@@ -126,7 +126,7 @@
                   }
 
 
-                  .recipe-clist-entry, .customtab-clist-entry {
+                  .recipe-clist-entry, .customtab-clist-entry, .customsize-clist-entry, .custombiofuels-clist-entry {
                         border-bottom: 4px solid white;
                         padding-bottom: 5px;
                         padding-top: 5px;
@@ -216,6 +216,21 @@
                         <button class="customtab-clist-remove">Remove</button>
                   </div>
             </template>
+            <template id="customsize-clist-template">
+                  <div class="customsize-clist-entry">
+                        <input type="text" class="customsize-clist-id" placeholder="ID" list="item-ids-list"></input>
+                        <input type="number" class="customsize-clist-width" min="1" max="99" placeholder="Width"></input>
+                        <input type="number" class="customsize-clist-height" min="1" max="99" placeholder="Height"></input>
+                        <button class="customsize-clist-remove">Remove</button>
+                  </div>
+            </template>
+            <template id="custombiofuels-clist-template">
+                  <div class="custombiofuels-clist-entry">
+                        <input type="text" class="custombiofuels-clist-id" placeholder="ID" list="item-ids-list"></input>
+                        <input type="number" class="custombiofuels-clist-fuel" min="0" placeholder="Energy"></input>
+                        <button class="custombiofuels-clist-remove">Remove</button>
+                  </div>
+            </template>
             <div id="output-mode">Output</div>
             <textarea id="code-output" placeholder="Output" readonly="readonly"></textarea>
             <button id="help-me">Help (Not implemented)</button>
@@ -231,6 +246,7 @@
             <button id="change-to-alias">AliasRecipe</button>
             <button id="change-to-customtab">CustomCraftingTab</button>
             <button id="change-to-customsizes">CustomSizes</button>
+            <button id="change-to-custombiofuels">CustomBioFuels</button>
             <br>
             <br>
             <div id="editor-input" hidden="hidden">
@@ -275,22 +291,33 @@
                         <input id="editor-customtab-add-display" type="text" placeholder="Display Name">
                         <input id="editor-customtab-add-spriteitemid" type="text" placeholder="Sprite ItemID" list="item-ids-list">
                         <input id="editor-customtab-add-parentpath" type="text" placeholder="Parent Path" list="craftingtabs-ids-list">
-                        <button id="editor-customtab-add-confirm">Add a tab</button>
+                        <button id="editor-customtab-add-confirm">Add a Tab</button>
                   </div>
                   <div class="editor-change">
                         <div id="editor-customtab-citems-list">
                         </div>
                   </div>
             </div>
-            <div id="editor-customsizes" hidden="hidden">
+            <div id="editor-customsize" hidden="hidden">
                   <div class="editor-add">
-                        <input id="editor-customsizes-add-id" type="text" placeholder="ID">
-                        <input id="editor-customsizes-add-display" type="text" placeholder="Display Name">
-                        <input id="editor-customsizes-add-spriteitemid" type="text" placeholder="Sprite ItemID" list="item-ids-list">
-                        <button id="editor-customsizes-add-confirm">Add a tab</button>
+                        <input id="editor-customsize-add-id" type="text" placeholder="ID" list="item-ids-list">
+                        <input id="editor-customsize-add-width" type="number" min="1" max="99" value="1" placeholder="Width">
+                        <input id="editor-customsize-add-height" type="number" min="1" max="99" value="1" placeholder="Height">
+                        <button id="editor-customsize-add-confirm">Add a Size</button>
                   </div>
                   <div class="editor-change">
-                        <div id="editor-customsizes-citems-list">
+                        <div id="editor-customsize-citems-list">
+                        </div>
+                  </div>
+            </div>
+            <div id="editor-custombiofuels" hidden="hidden">
+                  <div class="editor-add">
+                        <input id="editor-custombiofuels-add-id" type="text" placeholder="ID" list="item-ids-list">
+                        <input id="editor-custombiofuels-add-fuel" type="number" min="0" value="0" placeholder="Energy">
+                        <button id="editor-custombiofuels-add-confirm">Add a BioFuel</button>
+                  </div>
+                  <div class="editor-change">
+                        <div id="editor-custombiofuels-citems-list">
                         </div>
                   </div>
             </div>

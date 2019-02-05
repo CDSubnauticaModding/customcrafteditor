@@ -9,6 +9,8 @@ window.onload = function() {
       document.getElementById("change-to-modified").onclick = function() {change_mode(2)};
       document.getElementById("change-to-alias").onclick = function() {change_mode(3)};
       document.getElementById("change-to-customtab").onclick = function() {change_mode(4)};
+      document.getElementById("change-to-customsizes").onclick = function() {change_mode(5)};
+      document.getElementById("change-to-custombiofuels").onclick = function() {change_mode(6)};
 
       document.getElementById("editor-recipe-add-confirm").onclick = new_recipe;
       document.getElementById("editor-recipe-add-ingredient-confirm").onclick = new_ingredient;
@@ -16,6 +18,8 @@ window.onload = function() {
       document.getElementById("editor-recipe-add-unlock-confirm").onclick = new_unlock;
 
       document.getElementById("editor-customtab-add-confirm").onclick = new_craftingtab;
+      document.getElementById("editor-customsize-add-confirm").onclick = new_customsize;
+      document.getElementById("editor-custombiofuels-add-confirm").onclick = new_custombiofuel;
 
       change_mode(0);
       update_input_visibility();
@@ -29,21 +33,27 @@ function outputData() {
       if (outputMode === 1) {
             var __o = new OutputData(_addedRecipes,1);
             strings = toCString(__o);
-      }
-      if (outputMode === 2) {
+      } else if (outputMode === 2) {
             var __o = new OutputData(_modifiedRecipes,2);
             strings = toCString(__o);
-      }
-      if (outputMode === 3) {
+      } else if (outputMode === 3) {
             var __o = new OutputData(_aliasRecipes,3);
             strings = toCString(__o);
-      }
-      if (outputMode === 4) {
+      } else if (outputMode === 4) {
             var __o = new OutputData(_customCraftingTabs,4);
+            strings = toCString(__o);
+      } else if (outputMode === 5) {
+            var __o = new OutputData(_customItemSizes,5);
+            strings = toCString(__o);
+      } else if (outputMode === 6) {
+            var __o = new OutputData(_customBioFuels,6);
             strings = toCString(__o);
       }
       outp.innerHTML = strings;
       c_update_recipeList();
+      c_update_customtabList();
+      c_update_customsizeList();
+      c_update_custombiofuelList();
 }
 
 function copy_output() {
@@ -557,6 +567,136 @@ function c_remove_recipe_unlock(index,iindex) {
       outputData();
 }
 
+function c_update_customtabList() {
+      document.getElementById("editor-customtab-citems-list").innerHTML = "";
+      var template = document.getElementById("customtab-clist-template");
+      _customCraftingTabs.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".customtab-clist-id")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-id")[0].onchange = function() {c_edit_customtab(i,"id",this.value);};
+            clone.querySelectorAll(".customtab-clist-displayname")[0].value = v.displayname;
+            clone.querySelectorAll(".customtab-clist-displayname")[0].onchange = function() {c_edit_customtab(i,"displayname",this.value);};
+            clone.querySelectorAll(".customtab-clist-sprite")[0].value = v.spriteitemid;
+            clone.querySelectorAll(".customtab-clist-sprite")[0].onchange = function() {c_edit_customtab(i,"sprite",this.value);};
+            clone.querySelectorAll(".customtab-clist-parentpath")[0].value = v.parenttabpath;
+            clone.querySelectorAll(".customtab-clist-parentpath")[0].onchange = function() {c_edit_customtab(i,"parentpath",this.value);};
+            clone.querySelectorAll(".customtab-clist-remove")[0].onclick = function() {c_remove_customtab(i);};
+            document.getElementById("editor-customtab-citems-list").appendChild(clone);
+      });
+}
+
+function c_edit_customtab(index,field,newvalue) {
+      if (index >= 0 && _customCraftingTabs.length > index) {
+            if (field === "id") {
+                  _customCraftingTabs[index].id = newvalue;
+            } else if (field === "displayname") {
+                  _customCraftingTabs[index].displayname = newvalue;
+            } else if (field === "sprite") {
+                  _customCraftingTabs[index].spriteitemid = newvalue;
+            } else if (field === "parentpath") {
+                  _customCraftingTabs[index].parenttabpath = newvalue;
+            }
+      }
+      outputData();
+}
+
+function c_remove_customtab(index) {
+      if (index >= 0 && _customCraftingTabs.length > index) {
+            _customCraftingTabs.splice(index, 1);
+      }
+      outputData();
+}
+
+function new_customsize() {
+      var t_id = document.getElementById("editor-customsize-add-id").value;
+      var t_width = document.getElementById("editor-customsize-add-width").value;
+      var t_height = document.getElementById("editor-customsize-add-height").value;
+      var _size = new CustomSize(t_id,t_width,t_height);
+      _customItemSizes.push(_size);
+      document.getElementById("editor-customsize-add-id").value = "";
+      document.getElementById("editor-customsize-add-width").value = 1;
+      document.getElementById("editor-customsize-add-height").value = 1;
+      outputData();
+}
+
+function c_update_customsizeList() {
+      document.getElementById("editor-customsize-citems-list").innerHTML = "";
+      var template = document.getElementById("customsize-clist-template");
+      _customItemSizes.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".customsize-clist-id")[0].value = v.id;
+            clone.querySelectorAll(".customsize-clist-id")[0].onchange = function() {c_edit_customsize(i,"id",this.value);};
+            clone.querySelectorAll(".customsize-clist-width")[0].value = v.width;
+            clone.querySelectorAll(".customsize-clist-width")[0].onchange = function() {c_edit_customsize(i,"width",this.value);};
+            clone.querySelectorAll(".customsize-clist-height")[0].value = v.height;
+            clone.querySelectorAll(".customsize-clist-height")[0].onchange = function() {c_edit_customsize(i,"height",this.value);};
+            clone.querySelectorAll(".customsize-clist-remove")[0].onclick = function() {c_remove_customsize(i);};
+            document.getElementById("editor-customsize-citems-list").appendChild(clone);
+      });
+}
+
+function c_edit_customsize(index,field,newvalue) {
+      if (index >= 0 && _customItemSizes.length > index) {
+            if (field === "id") {
+                  _customItemSizes[index].id = newvalue;
+            } else if (field === "width") {
+                  _customItemSizes[index].width = newvalue;
+            } else if (field === "height") {
+                  _customItemSizes[index].height = newvalue;
+            }
+      }
+      outputData();
+}
+
+function c_remove_customsize(index) {
+      if (index >= 0 && _customItemSizes.length > index) {
+            _customItemSizes.splice(index, 1);
+      }
+      outputData();
+}
+
+function new_custombiofuel() {
+      var t_id = document.getElementById("editor-custombiofuels-add-id").value;
+      var t_fuel = document.getElementById("editor-custombiofuels-add-fuel").value;
+      var _fuel = new CustomBioFuel(t_id,t_fuel);
+      _customBioFuels.push(_fuel);
+      document.getElementById("editor-custombiofuels-add-id").value = "";
+      document.getElementById("editor-custombiofuels-add-fuel").value = 0;
+      outputData();
+}
+
+function c_update_custombiofuelList() {
+      document.getElementById("editor-custombiofuels-citems-list").innerHTML = "";
+      var template = document.getElementById("custombiofuels-clist-template");
+      _customBioFuels.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".custombiofuels-clist-id")[0].value = v.id;
+            clone.querySelectorAll(".custombiofuels-clist-id")[0].onchange = function() {c_edit_custombiofuel(i,"id",this.value);};
+            clone.querySelectorAll(".custombiofuels-clist-fuel")[0].value = v.fuel;
+            clone.querySelectorAll(".custombiofuels-clist-fuel")[0].onchange = function() {c_edit_custombiofuel(i,"fuel",this.value);};
+            clone.querySelectorAll(".custombiofuels-clist-remove")[0].onclick = function() {c_remove_custombiofuel(i);};
+            document.getElementById("editor-custombiofuels-citems-list").appendChild(clone);
+      });
+}
+
+function c_edit_custombiofuel(index,field,newvalue) {
+      if (index >= 0 && _customBioFuels.length > index) {
+            if (field === "id") {
+                  _customBioFuels[index].id = newvalue;
+            } else if (field === "fuel") {
+                  _customBioFuels[index].fuel = newvalue;
+            }
+      }
+      outputData();
+}
+
+function c_remove_custombiofuel(index) {
+      if (index >= 0 && _customBioFuels.length > index) {
+            _customBioFuels.splice(index, 1);
+      }
+      outputData();
+}
+
 function new_ingredient() {
       var t_id = document.getElementById("editor-recipe-add-ingredient-id").value;
       var t_amount = document.getElementById("editor-recipe-add-ingredient-amount").value;
@@ -682,26 +822,50 @@ function change_mode(m) {
       var el = document.getElementById("output-mode");
       var el_recipes = document.getElementById("editor-recipe");
       var el_customtabs = document.getElementById("editor-customtab");
+      var el_customsizes = document.getElementById("editor-customsize");
+      var el_custombiofuels = document.getElementById("editor-custombiofuels");
       if (outputMode === 0) {
             el.innerHTML = "Output - Nothing selected";
             el_recipes.hidden = "hidden";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
+            el_custombiofuels.hidden = "hidden";
       } else if (outputMode === 1) {
             el.innerHTML = "Output - AddedRecipe";
             el_recipes.hidden = "";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
+            el_custombiofuels.hidden = "hidden";
       } else if (outputMode === 2) {
             el.innerHTML = "Output - ModifiedRecipe";
             el_recipes.hidden = "";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
+            el_custombiofuels.hidden = "hidden";
       } else if (outputMode === 3) {
             el.innerHTML = "Output - AliasRecipe";
             el_recipes.hidden = "";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
+            el_custombiofuels.hidden = "hidden";
       } else if (outputMode === 4) {
             el.innerHTML = "Output - CustomCraftingTab";
             el_recipes.hidden = "hidden";
             el_customtabs.hidden = "";
+            el_customsizes.hidden = "hidden";
+            el_custombiofuels.hidden = "hidden";
+      } else if (outputMode === 5) {
+            el.innerHTML = "Output - CustomSizes";
+            el_recipes.hidden = "hidden";
+            el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "";
+            el_custombiofuels.hidden = "hidden";
+      } else if (outputMode === 6) {
+            el.innerHTML = "Output - CustomBioFuels";
+            el_recipes.hidden = "hidden";
+            el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
+            el_custombiofuels.hidden = "";
       }
       outputData();
 }
@@ -724,6 +888,12 @@ function loadInput() {
       } else if (parsed.mode === 4) {
             _customCraftingTabs = parsed.data;
             change_mode(4);
+      } else if (parsed.mode === 5) {
+            _customItemSizes = parsed.data;
+            change_mode(5);
+      } else if (parsed.mode === 6) {
+            _customBioFuels = parsed.data;
+            change_mode(6);
       }
       change_input_visibility(false);
       outputData();
@@ -734,6 +904,8 @@ function resetValues() {
       _modifiedRecipes = [];
       _aliasRecipes = [];
       _customCraftingTabs = [];
+      _customItemSizes = [];
+      _customBioFuels = [];
       temp_Ingredients = [];
       temp_Linked = [];
       temp_Unlock = [];
@@ -799,6 +971,8 @@ var _addedRecipes = [];
 var _modifiedRecipes = [];
 var _aliasRecipes = [];
 var _customCraftingTabs = [];
+var _customItemSizes = [];
+var _customBioFuels = [];
 
 var temp_Ingredients = [];
 var temp_Linked = [];

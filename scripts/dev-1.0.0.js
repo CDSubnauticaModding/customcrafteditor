@@ -11,6 +11,7 @@ function parseString(input) {
       var aliasRecipes = [];
       var customCraftingTabs = [];
       var customSizes = [];
+      var customBioFuels = [];
 
       var currentFieldCheck = "";
       var currentFieldGetValueNow = false;
@@ -23,18 +24,18 @@ function parseString(input) {
       var currentObject;
       var currentIngredient;
 
-      input_array.forEach((c,i) => {
+      input_array.forEach((c, i) => {
             if (!canceled) {
                   if (c !== "#" && !currentlineComment) {
-                        if (input_mode !== 1 && input_mode !== 2 && input_mode !== 3 && input_mode !== 4) {
+                        if (!(input_mode > 0)) {
                               if (c == " " || c == "\n") {
-      
+
                               } else if (c == ":") {
                                     if (currentFieldCheck == "AddedRecipes") {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
                                           currentFieldValue = "";
-                                          
+
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
@@ -43,7 +44,7 @@ function parseString(input) {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
                                           currentFieldValue = "";
-                                          
+
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
@@ -52,7 +53,7 @@ function parseString(input) {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
                                           currentFieldValue = "";
-                                          
+
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
@@ -61,7 +62,7 @@ function parseString(input) {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
                                           currentFieldValue = "";
-                                          
+
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
@@ -70,16 +71,25 @@ function parseString(input) {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
                                           currentFieldValue = "";
-                                          
+
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
                                           input_mode = 5;
+                                    } else if (currentFieldCheck == "CustomBioFuels") {
+                                          currentFieldCheck = "";
+                                          currentFieldGetValueNow = false;
+                                          currentFieldValue = "";
+
+                                          currentInnerField = "";
+                                          currentInnerFieldGetValueNow = false;
+                                          currentInnerFieldValue = "";
+                                          input_mode = 6;
                                     } else {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
                                           currentFieldValue = "";
-                                          
+
                                           currentInnerField = "";
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
@@ -94,14 +104,14 @@ function parseString(input) {
                                           if (c == " " || c == "\n") {
 
                                           } else if (c == "(") {
-                                                currentObject = new Recipe("",0,[],[],true,true,[],"","","");
-                                                openBrackets ++;
+                                                currentObject = new Recipe("", 0, [], [], true, true, [], "", "", "");
+                                                openBrackets++;
                                           } else {
 
                                           }
                                     } else if (openBrackets == 1 || openBrackets == 2) {
                                           if (openBrackets == 1 && c == ")") {
-                                                openBrackets --;
+                                                openBrackets--;
                                                 if (input_mode == 1) {
                                                       addedRecipes.push(currentObject);
                                                 } else if (input_mode == 2) {
@@ -113,7 +123,7 @@ function parseString(input) {
                                                 currentFieldCheck = "";
                                                 currentFieldGetValueNow = false;
                                                 currentFieldValue = "";
-                                                
+
                                                 currentInnerField = "";
                                                 currentInnerFieldGetValueNow = false;
                                                 currentInnerFieldValue = "";
@@ -132,7 +142,7 @@ function parseString(input) {
                                                                   currentFieldCheck = "";
                                                                   currentFieldGetValueNow = false;
                                                                   currentFieldValue = "";
-                                                                  
+
                                                                   currentInnerField = "";
                                                                   currentInnerFieldGetValueNow = false;
                                                                   currentInnerFieldValue = "";
@@ -140,7 +150,7 @@ function parseString(input) {
                                                                   currentFieldCheck = "";
                                                                   currentFieldGetValueNow = false;
                                                                   currentFieldValue = "";
-                                                                  
+
                                                                   currentInnerField = "";
                                                                   currentInnerFieldGetValueNow = false;
                                                                   currentInnerFieldValue = "";
@@ -151,7 +161,7 @@ function parseString(input) {
                                                                         currentFieldCheck = "";
                                                                         currentFieldGetValueNow = false;
                                                                         currentFieldValue = "";
-                                                                        
+
                                                                         currentInnerField = "";
                                                                         currentInnerFieldGetValueNow = false;
                                                                         currentInnerFieldValue = "";
@@ -166,7 +176,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -175,10 +185,10 @@ function parseString(input) {
                                                                         if (currentFieldCheck == "Ingredients") {
                                                                               currentFieldValue = [];
                                                                               if (c == " " || c == "\n") {
-                                                                                    
+
                                                                               } else if (c == "(") {
-                                                                                    openBrackets ++;
-                                                                                    currentIngredient = new Ingredient("",0);
+                                                                                    openBrackets++;
+                                                                                    currentIngredient = new Ingredient("", 0);
                                                                                     currentInnerField = "";
                                                                                     currentInnerFieldGetValueNow = false;
                                                                                     currentInnerFieldValue = "";
@@ -210,7 +220,7 @@ function parseString(input) {
                                                                                     currentInnerFieldGetValueNow = false;
                                                                                     currentInnerFieldValue = "";
                                                                               } else if (c == ",") {
-                                                                                    if  (currentInnerField == "") {
+                                                                                    if (currentInnerField == "") {
 
                                                                                     } else {
                                                                                           currentFieldValue.push(currentInnerField);
@@ -222,7 +232,7 @@ function parseString(input) {
                                                                         } else if (currentFieldCheck == "DisplayName" || currentFieldCheck == "Tooltip") {
                                                                               currentFieldValue = "";
                                                                               if (c == "\"") {
-                                                                                    
+
                                                                               } else {
                                                                                     currentFieldValue += c;
                                                                               }
@@ -236,12 +246,12 @@ function parseString(input) {
                                                                               if (currentInnerField == "") {
                                                                                     if (c == ")") {
                                                                                           currentFieldValue.push(currentIngredient);
-                                                                                          
+
                                                                                           currentIngredient = null;
                                                                                           currentInnerField = "";
                                                                                           currentInnerFieldGetValueNow = false;
                                                                                           currentInnerFieldValue = "";
-                                                                                          openBrackets --;
+                                                                                          openBrackets--;
                                                                                     } else if (c == " " || c == "\n") {
 
                                                                                     } else if (c == ";" || c == ":") {
@@ -262,7 +272,7 @@ function parseString(input) {
                                                                                                       }
                                                                                                 }
                                                                                                 currentFieldValue.push(currentIngredient);
-                                                                                                
+
                                                                                                 currentIngredient = null;
                                                                                                 currentInnerField = "";
                                                                                                 currentInnerFieldGetValueNow = false;
@@ -280,26 +290,26 @@ function parseString(input) {
                                                                                                 if (currentInnerField == "ItemID" || currentInnerField == "Required") {
                                                                                                       currentInnerFieldGetValueNow = true;
                                                                                                 } else {
-                                                                                                      
+
                                                                                                       currentInnerField = "";
                                                                                                       currentInnerFieldGetValueNow = false;
                                                                                                       currentInnerFieldValue = "";
                                                                                                 }
-                                                                                          }else {
+                                                                                          } else {
                                                                                                 currentInnerField += c;
                                                                                           }
                                                                                     } else {
                                                                                           if (currentInnerFieldValue === "") {
                                                                                                 if (c == ")") {
                                                                                                       currentFieldValue.push(currentIngredient);
-                                                                                                      
+
                                                                                                       currentIngredient = null;
                                                                                                       currentInnerField = "";
                                                                                                       currentInnerFieldGetValueNow = false;
                                                                                                       currentInnerFieldValue = "";
                                                                                                       openBrackets--;
                                                                                                 } else if (c == " ") {
-                                                                                                      
+
                                                                                                 } else if (c == "\n") {
                                                                                                       currentInnerField = "";
                                                                                                       currentInnerFieldGetValueNow = false;
@@ -320,8 +330,8 @@ function parseString(input) {
                                                                                                             currentInnerFieldValue = "";
                                                                                                       }
                                                                                                 } else if (c == ":") {
-                                                                                                      
-                                                                                                }else {
+
+                                                                                                } else {
                                                                                                       currentInnerFieldValue += c;
                                                                                                 }
                                                                                           } else {
@@ -367,8 +377,8 @@ function parseString(input) {
                                                                                                             currentInnerFieldValue = "";
                                                                                                       }
                                                                                                 } else if (c == ":") {
-                                                                                                      
-                                                                                                }else {
+
+                                                                                                } else {
                                                                                                       currentInnerFieldValue += c;
                                                                                                 }
                                                                                           }
@@ -376,10 +386,10 @@ function parseString(input) {
                                                                               }
                                                                         } else if (openBrackets == 1) {
                                                                               if (c == " " || c == "\n") {
-                                                                                    
+
                                                                               } else if (c == "(") {
-                                                                                    openBrackets ++;
-                                                                                    currentIngredient = new Ingredient("",0);
+                                                                                    openBrackets++;
+                                                                                    currentIngredient = new Ingredient("", 0);
                                                                                     currentInnerField = "";
                                                                                     currentInnerFieldGetValueNow = false;
                                                                                     currentInnerFieldValue = "";
@@ -406,7 +416,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -416,7 +426,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -432,7 +442,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -440,12 +450,12 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
                                                                         } else if (c == ",") {
-                                                                              if  (currentInnerField == "") {
+                                                                              if (currentInnerField == "") {
 
                                                                               } else {
                                                                                     currentFieldValue.push(currentInnerField);
@@ -464,12 +474,12 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
                                                                         } else if (c == "\"") {
-                                                                              
+
                                                                         } else {
                                                                               currentFieldValue += c;
                                                                         }
@@ -483,10 +493,10 @@ function parseString(input) {
                                                                                     } else if (currentFieldCheck == "Path") {
                                                                                           currentObject.path = currentFieldValue;
                                                                                     } else if (currentFieldCheck == "ForceUnlockAtStart") {
-                                                                                          if (currentFieldValue == "true") {
+                                                                                          if (currentFieldValue == "true" || currentFieldValue == "TRUE" || currentFieldValue == "yes" || currentFieldValue == "YES") {
                                                                                                 currentObject.forceunlockdefault = false;
                                                                                                 currentObject.forceunlock = true;
-                                                                                          } else if (currentFieldValue == "false") {
+                                                                                          } else if (currentFieldValue == "false" || currentFieldValue == "FALSE" || currentFieldValue == "no" || currentFieldValue == "NO") {
                                                                                                 currentObject.forceunlockdefault = false;
                                                                                                 currentObject.forceunlock = false;
                                                                                           }
@@ -495,7 +505,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -515,14 +525,14 @@ function parseString(input) {
                                           if (c == " " || c == "\n") {
 
                                           } else if (c == "(") {
-                                                currentObject = new CraftingTab("","","","");
-                                                openBrackets ++;
+                                                currentObject = new CraftingTab("", "", "", "");
+                                                openBrackets++;
                                           } else {
 
                                           }
                                     } else if (openBrackets == 1) {
                                           if (c == ")") {
-                                                openBrackets --;
+                                                openBrackets--;
                                                 customCraftingTabs.push(currentObject);
                                                 currentObject = null;
                                                 currentIngredient = null;
@@ -559,7 +569,7 @@ function parseString(input) {
                                                                   currentFieldCheck = "";
                                                                   currentFieldGetValueNow = false;
                                                                   currentFieldValue = "";
-                                                                  
+
                                                                   currentInnerField = "";
                                                                   currentInnerFieldGetValueNow = false;
                                                                   currentInnerFieldValue = "";
@@ -584,7 +594,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -593,7 +603,7 @@ function parseString(input) {
                                                                         if (currentFieldCheck == "DisplayName") {
                                                                               currentFieldValue = "";
                                                                               if (c == "\"") {
-                                                                                                
+
                                                                               } else {
                                                                                     currentFieldValue += c;
                                                                               }
@@ -614,7 +624,7 @@ function parseString(input) {
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
                                                                         } else if (c == "\"") {
-                                                                                          
+
                                                                         } else {
                                                                               currentFieldValue += c;
                                                                         }
@@ -651,14 +661,14 @@ function parseString(input) {
                                           if (c == " " || c == "\n") {
 
                                           } else if (c == "(") {
-                                                currentObject = new CustomSize("",1,1);
-                                                openBrackets ++;
+                                                currentObject = new CustomSize("", 1, 1);
+                                                openBrackets++;
                                           } else {
 
                                           }
                                     } else if (openBrackets == 1) {
                                           if (c == ")") {
-                                                openBrackets --;
+                                                openBrackets--;
                                                 customSizes.push(currentObject);
                                                 currentObject = null;
                                                 currentIngredient = null;
@@ -695,7 +705,7 @@ function parseString(input) {
                                                                   currentFieldCheck = "";
                                                                   currentFieldGetValueNow = false;
                                                                   currentFieldValue = "";
-                                                                  
+
                                                                   currentInnerField = "";
                                                                   currentInnerFieldGetValueNow = false;
                                                                   currentInnerFieldValue = "";
@@ -720,7 +730,7 @@ function parseString(input) {
                                                                               currentFieldCheck = "";
                                                                               currentFieldGetValueNow = false;
                                                                               currentFieldValue = "";
-                                                                              
+
                                                                               currentInnerField = "";
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
@@ -755,6 +765,113 @@ function parseString(input) {
                                     } else {
 
                                     }
+                              } else if (input_mode === 6) {
+                                    if (openBrackets == 0) {
+                                          if (c == " " || c == "\n") {
+
+                                          } else if (c == "(") {
+                                                currentObject = new CustomBioFuel("", 0);
+                                                openBrackets++;
+                                          } else {
+
+                                          }
+                                    } else if (openBrackets == 1) {
+                                          if (c == ")") {
+                                                openBrackets--;
+                                                customBioFuels.push(currentObject);
+                                                currentObject = null;
+                                                currentIngredient = null;
+                                                currentFieldCheck = "";
+                                                currentFieldGetValueNow = false;
+                                                currentFieldValue = "";
+                                                currentInnerField = "";
+                                                currentInnerFieldGetValueNow = false;
+                                                currentInnerFieldValue = "";
+                                          } else {
+                                                if (currentFieldCheck == "") {
+                                                      if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                            if (c == ":" || c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            }
+                                                      } else {
+                                                            currentFieldCheck += c;
+                                                      }
+                                                } else {
+                                                      if (!currentFieldGetValueNow) {
+                                                            if (c == " " || c == "\n") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ":") {
+                                                                  if (currentFieldCheck == "ItemID" || currentFieldCheck == "Energy") {
+                                                                        currentFieldGetValueNow = true;
+                                                                  } else {
+                                                                        currentFieldCheck = "";
+                                                                        currentFieldGetValueNow = false;
+                                                                        currentFieldValue = "";
+                                                                        currentInnerField = "";
+                                                                        currentInnerFieldGetValueNow = false;
+                                                                        currentInnerFieldValue = "";
+                                                                  }
+                                                            } else {
+                                                                  currentFieldCheck += c;
+                                                            }
+                                                      } else {
+                                                            if (currentFieldValue === "") {
+                                                                  if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                                        if (c == ";") {
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        }
+                                                                  } else {
+                                                                        currentFieldValue += c;
+                                                                  }
+                                                            } else {
+                                                                  if (c == "\n" || c == "," || c == ";") {
+                                                                        if (c == ";") {
+                                                                              if (currentFieldCheck == "ItemID") {
+                                                                                    currentObject.id = currentFieldValue;
+                                                                              } else if (currentFieldCheck == "Energy") {
+                                                                                    currentObject.fuel = currentFieldValue;
+                                                                              }
+                                                                        }
+                                                                        currentFieldCheck = "";
+                                                                        currentFieldGetValueNow = false;
+                                                                        currentFieldValue = "";
+                                                                        currentInnerField = "";
+                                                                        currentInnerFieldGetValueNow = false;
+                                                                        currentInnerFieldValue = "";
+                                                                  } else {
+                                                                        currentFieldValue += c;
+                                                                  }
+                                                            }
+                                                      }
+                                                }
+                                          }
+                                    } else {
+
+                                    }
                               }
                         }
                   } else {
@@ -763,34 +880,37 @@ function parseString(input) {
                         } else if (c === "\n") {
                               currentlineComment = false;
                         } else {
-                              
+
                         }
                   }
             }
       });
 
-      if (input_mode == 1) {
-            var __o = new OutputData(addedRecipes,1);
+      if (input_mode === 1) {
+            var __o = new OutputData(addedRecipes, 1);
             return __o;
-      } else if (input_mode == 2) {
-            var __o = new OutputData(modifiedRecipes,2);
+      } else if (input_mode === 2) {
+            var __o = new OutputData(modifiedRecipes, 2);
             return __o;
-      } else if (input_mode == 3) {
-            var __o = new OutputData(aliasRecipes,3);
+      } else if (input_mode === 3) {
+            var __o = new OutputData(aliasRecipes, 3);
             return __o;
-      } else if (input_mode == 4) {
-            var __o = new OutputData(customCraftingTabs,4);
+      } else if (input_mode === 4) {
+            var __o = new OutputData(customCraftingTabs, 4);
             return __o;
-      } else if (input_mode == 5) {
-            var __o = new OutputData(customSizes,5);
+      } else if (input_mode === 5) {
+            var __o = new OutputData(customSizes, 5);
+            return __o;
+      } else if (input_mode === 6) {
+            var __o = new OutputData(customBioFuels, 6);
             return __o;
       } else {
-            var __o = new OutputData([],0);
+            var __o = new OutputData([], 0);
             return __o;
       }
 }
 
-function toCString(idata,imode) {
+function toCString(idata, imode) {
 
       var data;
       var mode;
@@ -807,7 +927,7 @@ function toCString(idata,imode) {
 
       if (mode === 1) {
             var addedcount = data.length;
-            data.forEach((v,i) => {
+            data.forEach((v, i) => {
                   if (i === 0) {
                         output += "AddedRecipes: (" + newline;
                   } else {
@@ -818,7 +938,7 @@ function toCString(idata,imode) {
                         output += tab + "AmountCrafted: " + v.amount + ";" + newline;
                   }
                   var ingredientscount = v.ingredients.length;
-                  v.ingredients.forEach((vv,ii) => {
+                  v.ingredients.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "Ingredients: " + newline + tab + "(" + newline;
                         } else {
@@ -827,31 +947,31 @@ function toCString(idata,imode) {
                         output += tab + tab + "ItemID: " + vv.id + ";" + newline;
                         output += tab + tab + "Required: " + vv.amount + ";" + newline;
                         output += tab + ")";
-                        if (ii+1 >= ingredientscount) {
-                              output += ";"+newline;
+                        if (ii + 1 >= ingredientscount) {
+                              output += ";" + newline;
                         }
                   });
                   var linkeditemscount = v.linkeditems.length;
-                  v.linkeditems.forEach((vv,ii) => {
+                  v.linkeditems.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "LinkedItemIDs: ";
                         } else {
                               output += ",";
                         }
                         output += vv;
-                        if (ii+1 >= linkeditemscount) {
+                        if (ii + 1 >= linkeditemscount) {
                               output += ";" + newline;
                         }
                   });
                   var unlocksitemscount = v.unlocks.length;
-                  v.unlocks.forEach((vv,ii) => {
+                  v.unlocks.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "Unlocks: ";
                         } else {
                               output += ",";
                         }
                         output += vv;
-                        if (ii+1 >= unlocksitemscount) {
+                        if (ii + 1 >= unlocksitemscount) {
                               output += ";" + newline;
                         }
                   });
@@ -859,17 +979,16 @@ function toCString(idata,imode) {
                         output += tab + "Path: " + v.path + ";" + newline;
                   }
                   if (v.forceunlockdefault !== true) {
-                        output += tab + "ForceUnlockAtStart: " + v.forceunlock + ";" + newline;
+                        output += tab + "ForceUnlockAtStart: " + (v.forceunlock ? "YES" : "NO") + ";" + newline;
                   }
                   output += ")";
-                  if (i+1 >= addedcount) {
+                  if (i + 1 >= addedcount) {
                         output += ";" + newline;
                   }
             });
-      }
-      if (mode === 2) {
+      } else if (mode === 2) {
             var modifiedcount = data.length;
-            data.forEach((v,i) => {
+            data.forEach((v, i) => {
                   if (i === 0) {
                         output += "ModifiedRecipes: (" + newline;
                   } else {
@@ -880,7 +999,7 @@ function toCString(idata,imode) {
                         output += tab + "AmountCrafted: " + v.amount + ";" + newline;
                   }
                   var ingredientscount = v.ingredients.length;
-                  v.ingredients.forEach((vv,ii) => {
+                  v.ingredients.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "Ingredients: " + newline + tab + "(" + newline;
                         } else {
@@ -889,46 +1008,45 @@ function toCString(idata,imode) {
                         output += tab + tab + "ItemID: " + vv.id + ";" + newline;
                         output += tab + tab + "Required: " + vv.amount + ";" + newline;
                         output += tab + ")";
-                        if (ii+1 >= ingredientscount) {
-                              output += ";"+newline;
+                        if (ii + 1 >= ingredientscount) {
+                              output += ";" + newline;
                         }
                   });
                   var linkeditemscount = v.linkeditems.length;
-                  v.linkeditems.forEach((vv,ii) => {
+                  v.linkeditems.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "LinkedItemIDs: ";
                         } else {
                               output += ",";
                         }
                         output += vv;
-                        if (ii+1 >= linkeditemscount) {
+                        if (ii + 1 >= linkeditemscount) {
                               output += ";" + newline;
                         }
                   });
                   var unlocksitemscount = v.unlocks.length;
-                  v.unlocks.forEach((vv,ii) => {
+                  v.unlocks.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "Unlocks: ";
                         } else {
                               output += ",";
                         }
                         output += vv;
-                        if (ii+1 >= unlocksitemscount) {
+                        if (ii + 1 >= unlocksitemscount) {
                               output += ";" + newline;
                         }
                   });
                   if (v.forceunlockdefault !== true) {
-                        output += tab + "ForceUnlockAtStart: " + v.forceunlock + ";" + newline;
+                        output += tab + "ForceUnlockAtStart: " + (v.forceunlock ? "YES" : "NO") + ";" + newline;
                   }
                   output += ")";
-                  if (i+1 >= modifiedcount) {
+                  if (i + 1 >= modifiedcount) {
                         output += ";" + newline;
                   }
             });
-      }
-      if (mode === 3) {
+      } else if (mode === 3) {
             var aliascount = data.length;
-            data.forEach((v,i) => {
+            data.forEach((v, i) => {
                   if (i === 0) {
                         output += "AliasRecipes: (" + newline;
                   } else {
@@ -945,7 +1063,7 @@ function toCString(idata,imode) {
                         output += tab + "AmountCrafted: " + v.amount + ";" + newline;
                   }
                   var ingredientscount = v.ingredients.length;
-                  v.ingredients.forEach((vv,ii) => {
+                  v.ingredients.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "Ingredients: " + newline + tab + "(" + newline;
                         } else {
@@ -954,31 +1072,31 @@ function toCString(idata,imode) {
                         output += tab + tab + "ItemID: " + vv.id + ";" + newline;
                         output += tab + tab + "Required: " + vv.amount + ";" + newline;
                         output += tab + ")";
-                        if (ii+1 >= ingredientscount) {
-                              output += ";"+newline;
+                        if (ii + 1 >= ingredientscount) {
+                              output += ";" + newline;
                         }
                   });
                   var linkeditemscount = v.linkeditems.length;
-                  v.linkeditems.forEach((vv,ii) => {
+                  v.linkeditems.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "LinkedItemIDs: ";
                         } else {
                               output += ",";
                         }
                         output += vv;
-                        if (ii+1 >= linkeditemscount) {
+                        if (ii + 1 >= linkeditemscount) {
                               output += ";" + newline;
                         }
                   });
                   var unlocksitemscount = v.unlocks.length;
-                  v.unlocks.forEach((vv,ii) => {
+                  v.unlocks.forEach((vv, ii) => {
                         if (ii === 0) {
                               output += tab + "Unlocks: ";
                         } else {
                               output += ",";
                         }
                         output += vv;
-                        if (ii+1 >= unlocksitemscount) {
+                        if (ii + 1 >= unlocksitemscount) {
                               output += ";" + newline;
                         }
                   });
@@ -986,17 +1104,16 @@ function toCString(idata,imode) {
                         output += tab + "Path: " + v.path + ";" + newline;
                   }
                   if (v.forceunlockdefault !== true) {
-                        output += tab + "ForceUnlockAtStart: " + v.forceunlock + ";" + newline;
+                        output += tab + "ForceUnlockAtStart: " + (v.forceunlock ? "YES" : "NO") + ";" + newline;
                   }
                   output += ")";
-                  if (i+1 >= aliascount) {
+                  if (i + 1 >= aliascount) {
                         output += ";" + newline;
                   }
             });
-      }
-      if (mode === 4) {
+      } else if (mode === 4) {
             var craftingtabscount = data.length;
-            data.forEach((v,i) => {
+            data.forEach((v, i) => {
                   if (i === 0) {
                         output += "CustomCraftingTabs: (" + newline;
                   } else {
@@ -1013,14 +1130,13 @@ function toCString(idata,imode) {
                         output += tab + "ParentTabPath: " + v.parenttabpath + ";" + newline;
                   }
                   output += ")";
-                  if (i+1 >= craftingtabscount) {
+                  if (i + 1 >= craftingtabscount) {
                         output += ";" + newline;
                   }
             });
-      }
-      if (mode === 5) {
+      } else if (mode === 5) {
             var customsizescount = data.length;
-            data.forEach((v,i) => {
+            data.forEach((v, i) => {
                   if (i === 0) {
                         output += "CustomSizes: (" + newline;
                   } else {
@@ -1030,7 +1146,22 @@ function toCString(idata,imode) {
                   output += tab + "Width: " + v.width + ";" + newline;
                   output += tab + "Height: " + v.height + ";" + newline;
                   output += ")";
-                  if (i+1 >= customsizescount) {
+                  if (i + 1 >= customsizescount) {
+                        output += ";" + newline;
+                  }
+            });
+      } else if (mode === 6) {
+            var custombiofuelscount = data.length;
+            data.forEach((v, i) => {
+                  if (i === 0) {
+                        output += "CustomBioFuels: (" + newline;
+                  } else {
+                        output += "," + newline + "(" + newline;
+                  }
+                  output += tab + "ItemID: " + v.id + ";" + newline;
+                  output += tab + "Energy: " + v.fuel + ";" + newline;
+                  output += ")";
+                  if (i + 1 >= custombiofuelscount) {
                         output += ";" + newline;
                   }
             });
@@ -1047,14 +1178,14 @@ const tab = "    ";
 // CLASSES
 
 class OutputData {
-      constructor(data,mode) {
+      constructor(data, mode) {
             this.data = data;
             this.mode = mode;
       }
 }
 
 class Recipe {
-      constructor(id,amount,ingredients,linkeditems,forceunlock,forceunlockdefault,unlocks,path,displayname,tooltip) {
+      constructor(id, amount, ingredients, linkeditems, forceunlock, forceunlockdefault, unlocks, path, displayname, tooltip) {
             this.id = id;
             this.amount = amount;
             this.ingredients = ingredients;
@@ -1069,14 +1200,14 @@ class Recipe {
 }
 
 class Ingredient {
-      constructor(id,amount) {
+      constructor(id, amount) {
             this.id = id;
             this.amount = amount;
       }
 }
 
 class CraftingTab {
-      constructor(id,displayname,spriteitemid,parenttabpath) {
+      constructor(id, displayname, spriteitemid, parenttabpath) {
             this.id = id;
             this.displayname = displayname;
             this.spriteitemid = spriteitemid;
@@ -1085,9 +1216,16 @@ class CraftingTab {
 }
 
 class CustomSize {
-      constructor(id,width,height) {
+      constructor(id, width, height) {
             this.id = id;
             this.width = width;
             this.height = height;
+      }
+}
+
+class CustomBioFuel {
+      constructor(id, fuel) {
+            this.id = id;
+            this.fuel = fuel;
       }
 }
