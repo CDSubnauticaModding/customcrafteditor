@@ -207,6 +207,15 @@
                         <button class="recipe-clist-unlock-remove">Remove</button>
                   </div>
             </template>
+            <template id="customtab-clist-template">
+                  <div class="customtab-clist-entry">
+                        <input type="text" class="customtab-clist-id" placeholder="ID"></input>
+                        <input type="text" class="customtab-clist-displayname" placeholder="Display Name"></input>
+                        <input type="text" class="customtab-clist-sprite" placeholder="Sprite ItemID" list="item-ids-list"></input>
+                        <input type="text" class="customtab-clist-parentpath" placeholder="Parent Path" list="craftingtabs-ids-list"></input>
+                        <button class="customtab-clist-remove">Remove</button>
+                  </div>
+            </template>
             <div id="output-mode">Output</div>
             <textarea id="code-output" placeholder="Output" readonly="readonly"></textarea>
             <button id="help-me">Help (Not implemented)</button>
@@ -268,7 +277,8 @@
                         <button id="editor-customtab-add-confirm">Add a tab</button>
                   </div>
                   <div class="editor-change">
-
+                        <div id="editor-customtab-citems-list">
+                        </div>
                   </div>
             </div>
 

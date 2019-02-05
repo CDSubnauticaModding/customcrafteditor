@@ -44,6 +44,7 @@ function outputData() {
       }
       outp.innerHTML = strings;
       c_update_recipeList();
+      c_update_customtabList();
 }
 
 function copy_output() {
@@ -553,6 +554,46 @@ function c_remove_recipe_unlock(index,iindex) {
                         _aliasRecipes[index].unlocks.splice(iindex,1);
                   }
             }
+      }
+      outputData();
+}
+
+function c_update_customtabList() {
+      document.getElementById("editor-customtab-citems-list").innerHTML = "";
+      var template = document.getElementById("customtab-clist-template");
+      _customCraftingTabs.forEach((v,i) => {
+            var clone = document.importNode(template.content, true);
+            clone.querySelectorAll(".customtab-clist-id")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-id")[0].onchange = function() {c_edit_customtab(i,"id",this.value);};
+            clone.querySelectorAll(".customtab-clist-displayname")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-displayname")[0].onchange = function() {c_edit_customtab(i,"displayname",this.value);};
+            clone.querySelectorAll(".customtab-clist-sprite")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-sprite")[0].onchange = function() {c_edit_customtab(i,"sprite",this.value);};
+            clone.querySelectorAll(".customtab-clist-parentpath")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-parentpath")[0].onchange = function() {c_edit_customtab(i,"parentpath",this.value);};
+            clone.querySelectorAll(".customtab-clist-remove")[0].onclick = function() {c_remove_customtab(i);};
+            document.getElementById("editor-customtab-citems-list").appendChild(clone);
+      });
+}
+
+function c_edit_customtab(index,field,newvalue) {
+      if (index >= 0 && _customCraftingTabs.length > index) {
+            if (field === "id") {
+                  _customCraftingTabs[index].id = newvalue;
+            } else if (field === "displayname") {
+                  _customCraftingTabs[index].displayname = newvalue;
+            } else if (field === "sprite") {
+                  _customCraftingTabs[index].spriteitemid = newvalue;
+            } else if (field === "parentpath") {
+                  _customCraftingTabs[index].parenttabpath = newvalue;
+            }
+      }
+      outputData();
+}
+
+function c_remove_customtab(index) {
+      if (index >= 0 && _customCraftingTabs.length > index) {
+            _customCraftingTabs.splice(index, 1);
       }
       outputData();
 }
