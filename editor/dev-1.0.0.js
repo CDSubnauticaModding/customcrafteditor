@@ -9,6 +9,7 @@ window.onload = function() {
       document.getElementById("change-to-modified").onclick = function() {change_mode(2)};
       document.getElementById("change-to-alias").onclick = function() {change_mode(3)};
       document.getElementById("change-to-customtab").onclick = function() {change_mode(4)};
+      document.getElementById("change-to-customsizes").onclick = function() {change_mode(4)};
 
       document.getElementById("editor-recipe-add-confirm").onclick = new_recipe;
       document.getElementById("editor-recipe-add-ingredient-confirm").onclick = new_ingredient;
@@ -29,17 +30,17 @@ function outputData() {
       if (outputMode === 1) {
             var __o = new OutputData(_addedRecipes,1);
             strings = toCString(__o);
-      }
-      if (outputMode === 2) {
+      } else if (outputMode === 2) {
             var __o = new OutputData(_modifiedRecipes,2);
             strings = toCString(__o);
-      }
-      if (outputMode === 3) {
+      } else if (outputMode === 3) {
             var __o = new OutputData(_aliasRecipes,3);
             strings = toCString(__o);
-      }
-      if (outputMode === 4) {
+      } else if (outputMode === 4) {
             var __o = new OutputData(_customCraftingTabs,4);
+            strings = toCString(__o);
+      } else if (outputMode === 5) {
+            var __o = new OutputData(_customItemSizes,5);
             strings = toCString(__o);
       }
       outp.innerHTML = strings;
@@ -723,26 +724,37 @@ function change_mode(m) {
       var el = document.getElementById("output-mode");
       var el_recipes = document.getElementById("editor-recipe");
       var el_customtabs = document.getElementById("editor-customtab");
+      var el_customsizes = document.getElementById("editor-customsizes");
       if (outputMode === 0) {
             el.innerHTML = "Output - Nothing selected";
             el_recipes.hidden = "hidden";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
       } else if (outputMode === 1) {
             el.innerHTML = "Output - AddedRecipe";
             el_recipes.hidden = "";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
       } else if (outputMode === 2) {
             el.innerHTML = "Output - ModifiedRecipe";
             el_recipes.hidden = "";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
       } else if (outputMode === 3) {
             el.innerHTML = "Output - AliasRecipe";
             el_recipes.hidden = "";
             el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "hidden";
       } else if (outputMode === 4) {
             el.innerHTML = "Output - CustomCraftingTab";
             el_recipes.hidden = "hidden";
             el_customtabs.hidden = "";
+            el_customsizes.hidden = "hidden";
+      } else if (outputMode === 5) {
+            el.innerHTML = "Output - CustomSizes";
+            el_recipes.hidden = "hidden";
+            el_customtabs.hidden = "hidden";
+            el_customsizes.hidden = "";
       }
       outputData();
 }
@@ -765,6 +777,9 @@ function loadInput() {
       } else if (parsed.mode === 4) {
             _customCraftingTabs = parsed.data;
             change_mode(4);
+      } else if (parsed.mode === 4) {
+            _customItemSizes = parsed.data;
+            change_mode(5);
       }
       change_input_visibility(false);
       outputData();
@@ -775,6 +790,7 @@ function resetValues() {
       _modifiedRecipes = [];
       _aliasRecipes = [];
       _customCraftingTabs = [];
+      _customItemSizes = [];
       temp_Ingredients = [];
       temp_Linked = [];
       temp_Unlock = [];
@@ -840,6 +856,7 @@ var _addedRecipes = [];
 var _modifiedRecipes = [];
 var _aliasRecipes = [];
 var _customCraftingTabs = [];
+var _customItemSizes = [];
 
 var temp_Ingredients = [];
 var temp_Linked = [];

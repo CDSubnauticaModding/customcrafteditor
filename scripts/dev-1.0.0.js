@@ -10,6 +10,7 @@ function parseString(input) {
       var modifiedRecipes = [];
       var aliasRecipes = [];
       var customCraftingTabs = [];
+      var customSizes = [];
 
       var currentFieldCheck = "";
       var currentFieldGetValueNow = false;
@@ -65,6 +66,15 @@ function parseString(input) {
                                           currentInnerFieldGetValueNow = false;
                                           currentInnerFieldValue = "";
                                           input_mode = 4;
+                                    } else if (currentFieldCheck == "CustomSizes") {
+                                          currentFieldCheck = "";
+                                          currentFieldGetValueNow = false;
+                                          currentFieldValue = "";
+                                          
+                                          currentInnerField = "";
+                                          currentInnerFieldGetValueNow = false;
+                                          currentInnerFieldValue = "";
+                                          input_mode = 5;
                                     } else {
                                           currentFieldCheck = "";
                                           currentFieldGetValueNow = false;
@@ -161,7 +171,7 @@ function parseString(input) {
                                                                               currentInnerFieldGetValueNow = false;
                                                                               currentInnerFieldValue = "";
                                                                         }
-                                                                  } else {// ftgdfgdfgdfgdfg
+                                                                  } else {
                                                                         if (currentFieldCheck == "Ingredients") {
                                                                               currentFieldValue = [];
                                                                               if (c == " " || c == "\n") {
@@ -636,6 +646,115 @@ function parseString(input) {
                                     } else {
 
                                     }
+                              } else if (input_mode === 5) {
+                                    if (openBrackets == 0) {
+                                          if (c == " " || c == "\n") {
+
+                                          } else if (c == "(") {
+                                                currentObject = new CustomSize("",1,1);
+                                                openBrackets ++;
+                                          } else {
+
+                                          }
+                                    } else if (openBrackets == 1) {
+                                          if (c == ")") {
+                                                openBrackets --;
+                                                customSizes.push(currentObject);
+                                                currentObject = null;
+                                                currentIngredient = null;
+                                                currentFieldCheck = "";
+                                                currentFieldGetValueNow = false;
+                                                currentFieldValue = "";
+                                                currentInnerField = "";
+                                                currentInnerFieldGetValueNow = false;
+                                                currentInnerFieldValue = "";
+                                          } else {
+                                                if (currentFieldCheck == "") {
+                                                      if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                            if (c == ":" || c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            }
+                                                      } else {
+                                                            currentFieldCheck += c;
+                                                      }
+                                                } else {
+                                                      if (!currentFieldGetValueNow) {
+                                                            if (c == " " || c == "\n") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ";") {
+                                                                  currentFieldCheck = "";
+                                                                  currentFieldGetValueNow = false;
+                                                                  currentFieldValue = "";
+                                                                  
+                                                                  currentInnerField = "";
+                                                                  currentInnerFieldGetValueNow = false;
+                                                                  currentInnerFieldValue = "";
+                                                            } else if (c == ":") {
+                                                                  if (currentFieldCheck == "ItemID" || currentFieldCheck == "Width" || currentFieldCheck == "Height") {
+                                                                        currentFieldGetValueNow = true;
+                                                                  } else {
+                                                                        currentFieldCheck = "";
+                                                                        currentFieldGetValueNow = false;
+                                                                        currentFieldValue = "";
+                                                                        currentInnerField = "";
+                                                                        currentInnerFieldGetValueNow = false;
+                                                                        currentInnerFieldValue = "";
+                                                                  }
+                                                            } else {
+                                                                  currentFieldCheck += c;
+                                                            }
+                                                      } else {
+                                                            if (currentFieldValue === "") {
+                                                                  if (c == " " || c == "\n" || c == ":" || c == ";") {
+                                                                        if (c == ";") {
+                                                                              currentFieldCheck = "";
+                                                                              currentFieldGetValueNow = false;
+                                                                              currentFieldValue = "";
+                                                                              
+                                                                              currentInnerField = "";
+                                                                              currentInnerFieldGetValueNow = false;
+                                                                              currentInnerFieldValue = "";
+                                                                        }
+                                                                  } else {
+                                                                        currentFieldValue += c;
+                                                                  }
+                                                            } else {
+                                                                  if (c == "\n" || c == "," || c == ";") {
+                                                                        if (c == ";") {
+                                                                              if (currentFieldCheck == "ItemID") {
+                                                                                    currentObject.id = currentFieldValue;
+                                                                              } else if (currentFieldCheck == "Width") {
+                                                                                    currentObject.width = currentFieldValue;
+                                                                              } else if (currentFieldCheck == "Height") {
+                                                                                    currentObject.height = currentFieldValue;
+                                                                              }
+                                                                        }
+                                                                        currentFieldCheck = "";
+                                                                        currentFieldGetValueNow = false;
+                                                                        currentFieldValue = "";
+                                                                        currentInnerField = "";
+                                                                        currentInnerFieldGetValueNow = false;
+                                                                        currentInnerFieldValue = "";
+                                                                  } else {
+                                                                        currentFieldValue += c;
+                                                                  }
+                                                            }
+                                                      }
+                                                }
+                                          }
+                                    } else {
+
+                                    }
                               }
                         }
                   } else {
@@ -661,6 +780,9 @@ function parseString(input) {
             return __o;
       } else if (input_mode == 4) {
             var __o = new OutputData(customCraftingTabs,4);
+            return __o;
+      } else if (input_mode == 5) {
+            var __o = new OutputData(customSizes,5);
             return __o;
       } else {
             var __o = new OutputData([],0);
@@ -892,6 +1014,22 @@ function toCString(idata,imode) {
                         output += ";" + newline;
                   }
             });
+      } else if (mode === 5) {
+            var customsizescount = data.length;
+            data.forEach((v,i) => {
+                  if (i === 0) {
+                        output += "CustomSizes: (" + newline;
+                  } else {
+                        output += "," + newline + "(" + newline;
+                  }
+                  output += tab + "ItemID: " + v.id + ";" + newline;
+                  output += tab + "Width: " + v.width + ";" + newline;
+                  output += tab + "Height: " + v.height + ";" + newline;
+                  output += ")";
+                  if (i+1 >= customsizescount) {
+                        output += ";" + newline;
+                  }
+            });
       }
 
 
@@ -939,5 +1077,13 @@ class CraftingTab {
             this.displayname = displayname;
             this.spriteitemid = spriteitemid;
             this.parenttabpath = parenttabpath;
+      }
+}
+
+class CustomSize {
+      constructor(id,width,height) {
+            this.id = id;
+            this.width = width;
+            this.height = height;
       }
 }
