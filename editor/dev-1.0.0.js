@@ -565,11 +565,11 @@ function c_update_customtabList() {
             var clone = document.importNode(template.content, true);
             clone.querySelectorAll(".customtab-clist-id")[0].value = v.id;
             clone.querySelectorAll(".customtab-clist-id")[0].onchange = function() {c_edit_customtab(i,"id",this.value);};
-            clone.querySelectorAll(".customtab-clist-displayname")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-displayname")[0].value = v.displayname;
             clone.querySelectorAll(".customtab-clist-displayname")[0].onchange = function() {c_edit_customtab(i,"displayname",this.value);};
-            clone.querySelectorAll(".customtab-clist-sprite")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-sprite")[0].value = v.spriteitemid;
             clone.querySelectorAll(".customtab-clist-sprite")[0].onchange = function() {c_edit_customtab(i,"sprite",this.value);};
-            clone.querySelectorAll(".customtab-clist-parentpath")[0].value = v.id;
+            clone.querySelectorAll(".customtab-clist-parentpath")[0].value = v.parenttabpath;
             clone.querySelectorAll(".customtab-clist-parentpath")[0].onchange = function() {c_edit_customtab(i,"parentpath",this.value);};
             clone.querySelectorAll(".customtab-clist-remove")[0].onclick = function() {c_remove_customtab(i);};
             document.getElementById("editor-customtab-citems-list").appendChild(clone);
