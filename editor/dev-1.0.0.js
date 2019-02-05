@@ -9,7 +9,7 @@ window.onload = function() {
       document.getElementById("change-to-modified").onclick = function() {change_mode(2)};
       document.getElementById("change-to-alias").onclick = function() {change_mode(3)};
       document.getElementById("change-to-customtab").onclick = function() {change_mode(4)};
-      document.getElementById("change-to-customsizes").onclick = function() {change_mode(4)};
+      document.getElementById("change-to-customsizes").onclick = function() {change_mode(5)};
 
       document.getElementById("editor-recipe-add-confirm").onclick = new_recipe;
       document.getElementById("editor-recipe-add-ingredient-confirm").onclick = new_ingredient;
@@ -777,7 +777,7 @@ function loadInput() {
       } else if (parsed.mode === 4) {
             _customCraftingTabs = parsed.data;
             change_mode(4);
-      } else if (parsed.mode === 4) {
+      } else if (parsed.mode === 5) {
             _customItemSizes = parsed.data;
             change_mode(5);
       }
