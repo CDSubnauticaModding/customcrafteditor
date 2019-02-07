@@ -2,6 +2,10 @@
       <head>
             <title>CustomCraft - Editor v.1.5.001</title>
             <link rel="stylesheet" type="text/css" href="/customcrafteditor/files/main.css">
+            <meta property="og:title" content="Editor v.1.5.001" />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://cdsubnauticamodding.github.com/customcrafteditor/editor/1.5.001.html" />
+            <meta property="og:image" content="" />
             <style>
                   #code-output {
                         font-family: Arial;
@@ -233,20 +237,33 @@
             </template>
             <div id="output-mode">Output</div>
             <textarea id="code-output" placeholder="Output" readonly="readonly"></textarea>
-            <button id="help-me">Help (Not implemented)</button>
-            <button id="copy-output">Copy output</button>
-            <button id="editor-reset">Reset</button>
+            <div class="button-section-round" style="display: inline;"><!--
+                  --><button id="help-me" class="button-section-wrap-l">Help (Not implemented)</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="copy-output">Copy output</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="editor-reset" class="button-section-wrap-r">Reset</button><!--
+            --></div>
+           
             <div style="display: inline-flex; width: 20px"></div>
             <button id="editor-change-toggle">Toggle between Add and Edit</button>
             <button id="editor-input-toggle">Toggle Input (Import / Load)</button>
             <div style="display: inline-flex; width: 20px"></div>
-            <button id="change-to-nothing">Unselect Mode</button>
-            <button id="change-to-added">AddedRecipe</button>
-            <button id="change-to-modified">ModifiedRecipe</button>
-            <button id="change-to-alias">AliasRecipe</button>
-            <button id="change-to-customtab">CustomCraftingTab</button>
-            <button id="change-to-customsizes">CustomSizes</button>
-            <button id="change-to-custombiofuels">CustomBioFuels</button>
+            <div class="button-section-round" style="display: inline;"><!--
+                  --><button id="change-to-nothing" class="button-section-wrap-l">Unselect Mode</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="change-to-added">AddedRecipe</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="change-to-modified">ModifiedRecipe</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="change-to-alias">AliasRecipe</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="change-to-customtab">CustomCraftingTab</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="change-to-customsizes">CustomSizes</button><!--
+                  --><div class="button-section-divider"></div><!--
+                  --><button id="change-to-custombiofuels" class="button-section-wrap-r">CustomBioFuels</button><!--
+            --></div>
             <br>
             <br>
             <div id="editor-input" hidden="hidden">
