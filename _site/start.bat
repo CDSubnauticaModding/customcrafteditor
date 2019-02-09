@@ -1,5 +1,5 @@
 echo off
-title CustomCraftEditor Server
+title CustomCraftEditor SERVER2
 cls
 
 cd /D %~dp0>nul

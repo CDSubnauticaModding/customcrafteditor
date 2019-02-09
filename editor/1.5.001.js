@@ -1,3 +1,5 @@
+---
+---
 window.onload = function() {
       document.getElementById("copy-output").onclick = copy_output;
       document.getElementById("editor-reset").onclick = resetValues;

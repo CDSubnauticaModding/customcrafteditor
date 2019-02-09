@@ -1,3 +1,5 @@
+---
+---
 window.onload = function() {
       document.getElementById("input-confirm").onclick = checkInput;
       document.getElementById("output-copy").onclick = copyOutput;

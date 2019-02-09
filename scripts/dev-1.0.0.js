@@ -1,3 +1,5 @@
+---
+---
 function parseString(input) {
       var output = "";
       var input_array = input.split("");
